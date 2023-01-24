@@ -15,7 +15,14 @@
 #### Prerequisites
 Using this project requires at least [Python 3.7](https://www.python.org/downloads/).
 
-### Configuration
+#### Features
+
+- A thread-safe client for your application.
+- HTTP pooling capabilities.
+- Easy integration with Trend Micro Vision One APIs.
+
+
+#### Configuration
 | parameter        | description                                          |
 |:-----------------|:-----------------------------------------------------|
 | name             | Identify the application using this library.         |
@@ -24,8 +31,13 @@ Using this project requires at least [Python 3.7](https://www.python.org/downloa
 | pool_connections | Number of connection pools to cache (defaults to 1). |
 | pool_maxsize     | Maximum size of the pool (defaults to 1).            |
 
-#### Usage
+#### Quick start
+Installation
+```
+pip install pytmv1
+```
 
+Usage
 ```python
 >>> import pytmv1
 >>> client = pytmv1.client("MyApplication", "Token", "https://api.xdr.trendmicro.com")
@@ -47,12 +59,12 @@ ResultCode.SUCCESS
 ```
 
 
-#### Development
+#### Build the project
 Install dependencies
 ```console
 pip install -e ".[dev]"
 ```
-Build the project
+Build
 ```console
 hatch build
 ```
