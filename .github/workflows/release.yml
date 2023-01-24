@@ -43,6 +43,8 @@ jobs:
           git checkout main
           git merge --no-ff ${{ env.BRANCH }}
           git tag -a ${{ env.VERSION }} -m "Release ${{ env.VERSION }}"
+          git checkout ${{ env.BRANCH }}
+          git merge main
           git checkout develop
           git merge --no-ff ${{ env.BRANCH }}
           git push --atomic origin main develop ${{ env.BRANCH }} refs/tags/${{ env.VERSION }}
