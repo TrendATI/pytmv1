@@ -1,0 +1,21 @@
+name: build
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: [develop, release-**]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - name: Install hatch
+        run: pip install --upgrade hatch
+      - name: Run hatch build
+        run: hatch --verbose build
