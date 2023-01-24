@@ -17,7 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ env.BRANCH }}
+          token: ${{ secrets.GIT_BOT_TOKEN }}
+          fetch-depth: 0
       - name: Set up Python 3.7
         uses: actions/setup-python@v4
         with:
@@ -26,7 +27,6 @@ jobs:
         run: |
           git config --add user.name "TrendATI-bot"
           git config --add user.email "ati-integration@trendmicro.com"
-          git fetch origin main develop
       - name: Run build
         run: |
           pip install --upgrade hatch
@@ -43,6 +43,8 @@ jobs:
           git checkout main
           git merge --no-ff ${{ env.BRANCH }}
           git tag -a ${{ env.VERSION }} -m "Release ${{ env.VERSION }}"
+          git checkout ${{ env.BRANCH }}
+          git merge main
           git checkout develop
           git merge --no-ff ${{ env.BRANCH }}
           git push --atomic origin main develop ${{ env.BRANCH }} refs/tags/${{ env.VERSION }}
