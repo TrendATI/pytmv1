@@ -45,8 +45,8 @@ dev = [
 ]
 
 [project.urls]
-"Source" = "https://dsgithub.trendmicro.com/TP-CloudServices/integration/pytmv1"
-"Issues" = "https://dsgithub.trendmicro.com/TP-CloudServices/integration/pytmv1/issues"
+"Source" = "https://github.com/TrendATI/pytmv1"
+"Issues" = "https://github.com/TrendATI/pytmv1/issues"
 
 [tool.hatch.build.targets.sdist]
 exclude = [".github", "tests"]
