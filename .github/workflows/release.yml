@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ env.BRANCH }}
+          fetch-depth: 0
       - name: Set up Python 3.7
         uses: actions/setup-python@v4
         with:
@@ -26,7 +26,6 @@ jobs:
         run: |
           git config --add user.name "TrendATI-bot"
           git config --add user.email "ati-integration@trendmicro.com"
-          git fetch origin main develop
       - name: Run build
         run: |
           pip install --upgrade hatch
