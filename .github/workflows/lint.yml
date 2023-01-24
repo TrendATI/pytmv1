@@ -1,0 +1,57 @@
+name: lint
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: [develop, release-**]
+
+jobs:
+  black:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - name: Install dependencies
+        run: pip install --upgrade pip black
+      - name: Run black
+        run: black --check --diff --verbose .
+  isort:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - name: Install dependencies
+        run: pip install --upgrade pip isort[colors]
+      - name: Run isort
+        run: isort --check-only --diff --verbose .
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - name: Install dependencies
+        run: pip install --upgrade pip flake8
+      - name: Run flake8
+        run: flake8 --verbose .
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.7"
+      - name: Install dependencies
+        run: pip install --upgrade pip mypy pydantic
+      - name: Run mypy
+        run: mypy --install-types --non-interactive ./src
