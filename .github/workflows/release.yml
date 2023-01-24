@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GIT_BOT_TOKEN }}
+          ssh-key: ${{ secrets.GIT_BOT_SSH_KEY }}
           fetch-depth: 0
       - name: Set up Python 3.7
         uses: actions/setup-python@v4
@@ -39,6 +39,7 @@ jobs:
           verbose: true
       - name: Merge release branch
         run: |
+          git checkout ${{ env.BRANCH }}
           git commit -am "Release ${{ env.VERSION }}: increment version"
           git checkout main
           git merge --no-ff ${{ env.BRANCH }}
