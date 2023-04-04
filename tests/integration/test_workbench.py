@@ -3,6 +3,7 @@ from pytmv1 import (
     GetAlertListResp,
     InvestigationStatus,
     NoContentResp,
+    Provider,
     ResultCode,
 )
 
@@ -58,6 +59,13 @@ def test_edit_alert_status_is_not_found(client):
     assert result.result_code == ResultCode.ERROR
     assert result.error.code == "NotFound"
     assert result.error.status == 404
+
+
+def test_get_alert_details(client):
+    result = client.get_alert_details("12345")
+    assert result.result_code == ResultCode.SUCCESS
+    assert result.response.alert.alert_provider == Provider.SAE
+    assert result.response.etag == "33a64df551425fcc55e4d42a148795d9f25f89d4"
 
 
 def test_get_alert_list(client):

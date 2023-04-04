@@ -7,6 +7,7 @@ from pytmv1 import (
     ResultCode,
     SuspiciousObjectTask,
 )
+from pytmv1.model.enums import ScanAction
 
 
 def test_add_to_exception_list(client):
@@ -16,16 +17,22 @@ def test_add_to_exception_list(client):
     assert isinstance(result.response, MultiResp)
     assert result.result_code == ResultCode.SUCCESS
     assert len(result.response.items) > 0
+    assert result.response.items[0].task_id is None
     assert result.response.items[0].status == 201
 
 
 def test_add_to_suspicious_list(client):
     result = client.add_to_suspicious_list(
-        SuspiciousObjectTask(objectType=ObjectType.IP, objectValue="1.1.1.1")
+        SuspiciousObjectTask(
+            objectType=ObjectType.IP,
+            objectValue="1.1.1.1",
+            scanAction=ScanAction.BLOCK,
+        )
     )
     assert isinstance(result.response, MultiResp)
     assert result.result_code == ResultCode.SUCCESS
     assert len(result.response.items) > 0
+    assert result.response.items[0].task_id is None
     assert result.response.items[0].status == 201
 
 
@@ -36,6 +43,7 @@ def test_remove_from_exception_list(client):
     assert isinstance(result.response, MultiResp)
     assert result.result_code == ResultCode.SUCCESS
     assert len(result.response.items) > 0
+    assert result.response.items[0].task_id is None
     assert result.response.items[0].status == 204
 
 
@@ -46,6 +54,7 @@ def test_remove_from_suspicious_list(client):
     assert isinstance(result.response, MultiResp)
     assert result.result_code == ResultCode.SUCCESS
     assert len(result.response.items) > 0
+    assert result.response.items[0].task_id is None
     assert result.response.items[0].status == 204
 
 

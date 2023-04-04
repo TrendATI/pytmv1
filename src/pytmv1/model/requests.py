@@ -1,7 +1,7 @@
 from typing import Optional
 
-from ..model.commons import BaseModel
-from ..model.enums import ObjectType
+from .commons import BaseModel
+from .enums import ObjectType, RiskLevel, ScanAction
 
 
 class AccountTask(BaseModel):
@@ -46,9 +46,9 @@ class ObjectTask(BaseModel):
 
 
 class SuspiciousObjectTask(ObjectTask):
-    scan_action: Optional[str] = None
+    scan_action: Optional[ScanAction] = None
     """Action applied after detecting a suspicious object."""
-    risk_level: Optional[str] = None
+    risk_level: Optional[RiskLevel] = None
     """Risk level of a suspicious object."""
     days_to_expiration: Optional[int] = None
     """Number of days before the object expires."""
