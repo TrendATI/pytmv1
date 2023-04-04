@@ -47,8 +47,12 @@ def build_suspicious_request(
             {
                 task.object_type.value: task.object_value,
                 "description": task.description,
-                "riskLevel": task.risk_level,
-                "scanAction": task.scan_action,
+                "riskLevel": (
+                    task.risk_level.value if task.risk_level else None
+                ),
+                "scanAction": (
+                    task.scan_action.value if task.scan_action else None
+                ),
                 "daysToExpiration": task.days_to_expiration,
             }
         )

@@ -30,6 +30,7 @@ from .model.responses import (
     BytesResp,
     ConnectivityResp,
     ConsumeLinkableResp,
+    GetAlertDetailsResp,
     GetAlertListResp,
     GetEndpointDataResp,
     GetExceptionListResp,
@@ -328,7 +329,7 @@ class Client:
         self,
         alert_id: str,
         status: InvestigationStatus,
-        if_match: Optional[str],
+        if_match: Optional[str] = None,
     ) -> Result[NoContentResp]:
         """Edit the status of an alert or investigation triggered in Workbench.
 
@@ -346,7 +347,7 @@ class Client:
             Api.EDIT_ALERT_STATUS.value.format(alert_id),
             HttpMethod.PATCH,
             json={"investigationStatus": status},
-            headers={"If-Match": if_match},
+            headers=utils.filter_none({"If-Match": if_match}),
         )
 
     def enable_account(self, *accounts: AccountTask) -> MultiResult[MultiResp]:
@@ -365,26 +366,20 @@ class Client:
             ],
         )
 
-    def sign_out_account(
-        self, *accounts: AccountTask
-    ) -> MultiResult[MultiResp]:
-        """Signs the user out of all active application and browser sessions.
+    def get_alert_details(self, alert_id: str) -> Result[GetAlertDetailsResp]:
+        """Displays information about the specified alert.
 
-        :param accounts: Account(s) to sign out.
-        :type accounts: Tuple[AccountTask, ...]
-        :rtype: MultiResult[MultiResp]
+        :param alert_id: Workbench alert id.
+        :type alert_id: str
+        :rtype: Result[GetAlertDetailsResp]:
         """
-        return self._core.send_multi(
-            MultiResp,
-            Api.SIGN_OUT_ACCOUNT,
-            json=[
-                task.dict(by_alias=True, exclude_none=True)
-                for task in accounts
-            ],
+        return self._core.send(
+            GetAlertDetailsResp,
+            Api.GET_ALERT_DETAILS.value.format(alert_id),
         )
 
     def get_alert_list(
-        self, start_time: Optional[str], end_time: Optional[str]
+        self, start_time: Optional[str] = None, end_time: Optional[str] = None
     ) -> Result[GetAlertListResp]:
         """Retrieves workbench alerts in a paginated list.
 
@@ -680,6 +675,24 @@ class Client:
             ],
         )
 
+    def sign_out_account(
+        self, *accounts: AccountTask
+    ) -> MultiResult[MultiResp]:
+        """Signs the user out of all active application and browser sessions.
+
+        :param accounts: Account(s) to sign out.
+        :type accounts: Tuple[AccountTask, ...]
+        :rtype: MultiResult[MultiResp]
+        """
+        return self._core.send_multi(
+            MultiResp,
+            Api.SIGN_OUT_ACCOUNT,
+            json=[
+                task.dict(by_alias=True, exclude_none=True)
+                for task in accounts
+            ],
+        )
+
     def submit_file_to_sandbox(
         self,
         file: bytes,
@@ -725,7 +738,7 @@ class Client:
         return self._core.send_multi(
             MultiUrlResp,
             Api.SUBMIT_URLS_TO_SANDBOX,
-            json={"url": list(urls)},
+            json=[{"url": url} for url in urls],
         )
 
     def terminate_process(

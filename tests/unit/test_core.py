@@ -33,7 +33,7 @@ from pytmv1.exceptions import (
     ServerMultiJsonError,
     ServerTextError,
 )
-from pytmv1.model.enums import Api
+from pytmv1.model.enums import Api, RiskLevel
 from pytmv1.model.responses import BaseStatusResponse
 from tests.data import TextResponse
 
@@ -174,7 +174,7 @@ def test_parse_data_with_json():
     raw_response.json = lambda: SandboxSuspiciousListResp(
         items=[
             SandboxSuspiciousObject(
-                riskLevel="high",
+                riskLevel=RiskLevel.HIGH,
                 analysisCompletionDateTime="2021-05-07T03:08:40",
                 expiredDateTime="2021-06-07T03:08:40Z",
                 rootSha1="fb5608fa03de204a12fe1e9e5275e4a682107471",

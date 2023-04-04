@@ -18,8 +18,16 @@ from .exceptions import (
     ServerMultiJsonError,
     ServerTextError,
 )
-from .model.commons import Error, MsData, MsDataUrl, MsError, MsStatus
-from .model.enums import Api, HttpMethod, Status
+from .model.commons import (
+    Error,
+    MsData,
+    MsDataUrl,
+    MsError,
+    MsStatus,
+    SaeAlert,
+    TiAlert,
+)
+from .model.enums import Api, HttpMethod, Provider, Status
 from .model.requests import EndpointTask
 from .model.responses import (
     MR,
@@ -29,6 +37,7 @@ from .model.responses import (
     BytesResp,
     C,
     ConsumeLinkableResp,
+    GetAlertDetailsResp,
     MultiResp,
     MultiUrlResp,
     NoContentResp,
@@ -229,8 +238,12 @@ class Core:
             "Sending request [Method=%s, URL=%s, Headers=%s, Body=%s]",
             request.method,
             request.url,
-            re.sub("Bearer (\\w+)", "***", str(request.headers)),
-            request.body,
+            re.sub("Bearer [^\\s']+", "*****", str(request.headers)),
+            (
+                request.body.decode("utf-8")
+                if type(request.body) == bytes
+                else request.body
+            ),
         )
         response: Response = self._adapter.send(
             request, stream=False, timeout=(CONNECT_TIMEOUT, READ_TIMEOUT)
@@ -276,6 +289,19 @@ def _parse_data(raw_response: Response, class_: Type[R]) -> R:
                 )
             )
         log.info("Parsing json response [Class=%s]", class_.__name__)
+        if class_ == GetAlertDetailsResp:
+            response_json: Dict[str, str] = raw_response.json()
+            return class_(
+                alert=parse_obj_as(
+                    (
+                        SaeAlert
+                        if response_json.get("alertProvider") == Provider.SAE
+                        else TiAlert
+                    ),
+                    response_json,
+                ),
+                etag=raw_response.headers.get("ETag", ""),
+            )
         return class_.parse_obj(raw_response.json())
     if "application" in content_type and class_ == BytesResp:
         log.info("Parsing binary response")

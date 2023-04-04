@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic.utils import to_lower_camel
 
-from ..model.enums import (
+from .enums import (
     EntityType,
     Iam,
     InvestigationStatus,
@@ -13,6 +13,8 @@ from ..model.enums import (
     OperatingSystem,
     ProductCode,
     Provider,
+    RiskLevel,
+    ScanAction,
     Severity,
     Status,
 )
@@ -27,8 +29,8 @@ class BaseConsumable(BaseModel):
     ...
 
 
-def _get_task_id(headers: List[Dict[str, str]]) -> str:
-    return next(
+def _get_task_id(headers: List[Dict[str, str]]) -> Optional[str]:
+    task_id: str = next(
         (
             h.get("value", "")
             for h in headers
@@ -36,6 +38,7 @@ def _get_task_id(headers: List[Dict[str, str]]) -> str:
         ),
         "",
     ).split("/")[-1]
+    return task_id if task_id != "" else None
 
 
 class Account(BaseModel):
@@ -193,8 +196,8 @@ class MsDataUrl(MsData):
 
 
 class MsError(Error):
-    task_id: str
     extra: Dict[str, str] = {}
+    task_id: Optional[str]
 
     def __init__(self, **data: Any):
         data.update(data.pop("body", {}))
@@ -229,7 +232,7 @@ class SaeIndicator(Indicator):
 
 
 class SandboxSuspiciousObject(BaseModel):
-    risk_level: str
+    risk_level: RiskLevel
     analysis_completion_date_time: str
     expired_date_time: str
     root_sha1: str
@@ -237,8 +240,8 @@ class SandboxSuspiciousObject(BaseModel):
 
 
 class SuspiciousObject(ExceptionObject):
-    scan_action: str
-    risk_level: str
+    scan_action: ScanAction
+    risk_level: RiskLevel
     in_exception_list: bool
     expired_date_time: str
 

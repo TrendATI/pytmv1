@@ -35,10 +35,36 @@ def test_submit_file_to_sandbox_is_too_many_request(client):
     assert result.error.status == 429
 
 
-def test_submit_urls_to_sandbox_with_multi_url_error_is_failed(client):
+def test_submit_urls_to_sandbox_with_multi_url(client):
     result = client.submit_urls_to_sandbox(
-        "https://dummy.com", "https://dummy.com"
+        "https://trendmicro.com", "https://trendmicro2.com"
     )
+    assert result.result_code == ResultCode.SUCCESS
+    assert result.response.items[0].url == "https://www.trendmicro.com"
+    assert result.response.items[0].status == 202
+    assert result.response.items[0].task_id == "00000005"
+    assert (
+        result.response.items[0].id == "012e4eac-9bd9-4e89-95db-77e02f75a6f5"
+    )
+    assert (
+        result.response.items[0].digest.md5
+        == "f3a2e1227de8d5ae7296665c1f34b28d"
+    )
+    assert result.response.items[1].url == "https://www.trendmicro2.com"
+    assert result.response.items[1].status == 202
+    assert result.response.items[1].task_id == "00000006"
+    assert (
+        result.response.items[1].id
+        == "01232cs823-9bd9-4e89-95db-77e02f75a6f34"
+    )
+    assert (
+        result.response.items[1].digest.md5
+        == "x23s2sd11227de8d5ae7296665c1f34b3212"
+    )
+
+
+def test_submit_urls_to_sandbox_is_bad_request(client):
+    result = client.submit_urls_to_sandbox("bad_request")
     assert result.result_code == ResultCode.ERROR
     assert result.errors[0].extra["url"] == "https://www.trendmicro.com"
     assert result.errors[0].status == 202
