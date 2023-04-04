@@ -3,7 +3,7 @@ from typing import Any, Dict, Generic, List, Optional, Tuple, TypeVar, Union
 from pydantic import Field
 from pydantic.generics import GenericModel
 
-from ..model.commons import (
+from .commons import (
     Account,
     BaseConsumable,
     BaseModel,
@@ -18,8 +18,9 @@ from ..model.commons import (
     SuspiciousObject,
     TiAlert,
 )
-from ..model.enums import (
+from .enums import (
     ObjectType,
+    RiskLevel,
     SandboxAction,
     SandboxObjectType,
     Status,
@@ -118,6 +119,11 @@ class EndpointTaskResp(BaseTaskResp):
     endpoint_name: str
 
 
+class GetAlertDetailsResp(BaseResponse):
+    alert: Union[SaeAlert, TiAlert]
+    etag: str
+
+
 class GetAlertListResp(BaseLinkableResp[Union[SaeAlert, TiAlert]]):
     total_count: int
     count: int
@@ -161,7 +167,7 @@ class SandboxAnalysisResultResp(BaseResponse):
     id: str
     type: SandboxObjectType
     analysis_completion_date_time: str
-    risk_level: str
+    risk_level: RiskLevel
     true_file_type: Optional[str]
     digest: Optional[Digest]
     arguments: Optional[str]

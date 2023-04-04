@@ -52,6 +52,6 @@ jobs:
         with:
           python-version: "3.7"
       - name: Install dependencies
-        run: pip install --upgrade pip mypy pydantic
+        run: pip install --upgrade pip mypy==1.0.1 pydantic==1.10.4
       - name: Run mypy
         run: mypy --install-types --non-interactive ./src

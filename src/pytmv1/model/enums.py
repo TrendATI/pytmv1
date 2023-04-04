@@ -17,6 +17,7 @@ class Api(str, Enum):
     EDIT_ALERT_STATUS = "/workbench/alerts/{0}"
     ENABLE_ACCOUNT = "/response/domainAccounts/enable"
     ISOLATE_ENDPOINT = "/response/endpoints/isolate"
+    GET_ALERT_DETAILS = "/workbench/alerts/{0}"
     GET_ALERT_LIST = "/workbench/alerts"
     GET_ENDPOINT_DATA = "/eiqs/endpoints"
     GET_EXCEPTION_LIST = "/threatintel/suspiciousObjectExceptions"
@@ -117,6 +118,12 @@ class QueryOp(str, Enum):
     OR = " or "
 
 
+class RiskLevel(str, Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+
+
 class SandboxAction(str, Enum):
     ANALYZE_FILE = "analyzeFile"
     ANALYZE_URL = "analyzeUrl"
@@ -125,6 +132,11 @@ class SandboxAction(str, Enum):
 class SandboxObjectType(str, Enum):
     URL = "url"
     FILE = "file"
+
+
+class ScanAction(str, Enum):
+    BLOCK = "block"
+    LOG = "log"
 
 
 class Severity(str, Enum):

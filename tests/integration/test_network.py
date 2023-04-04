@@ -29,13 +29,7 @@ def test_conn_opened_with_multi_processing_single_client_is_one(client, ip):
 def test_conn_opened_with_multi_processing_multi_client_is_one(
     pytestconfig, client, ip
 ):
-    threads = thread_list(
-        lambda: client(
-            client._core._appname,
-            client._core._token,
-            pytestconfig.getoption("mock-url"),
-        )
-    )
+    threads = thread_list(lambda: client.get_exception_list())
     for t in threads:
         t.start()
     for t in threads:
