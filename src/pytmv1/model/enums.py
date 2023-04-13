@@ -119,6 +119,7 @@ class QueryOp(str, Enum):
 
 
 class RiskLevel(str, Enum):
+    NO_RISK = "noRisk"
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"

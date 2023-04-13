@@ -63,8 +63,8 @@ def test_get_exception_list(client):
     assert isinstance(result.response, GetExceptionListResp)
     assert result.result_code == ResultCode.SUCCESS
     assert len(result.response.items) > 0
-    assert result.response.items[0].url
     assert result.response.items[0].type == ObjectType.URL
+    assert result.response.items[0].value == "https://*.example.com/path1/*"
 
 
 def test_get_suspicious_list(client):
@@ -72,5 +72,8 @@ def test_get_suspicious_list(client):
     assert isinstance(result.response, GetSuspiciousListResp)
     assert result.result_code == ResultCode.SUCCESS
     assert len(result.response.items) > 0
-    assert result.response.items[0].url
-    assert result.response.items[0].type == ObjectType.URL
+    assert result.response.items[0].type == ObjectType.FILE_SHA256
+    assert (
+        result.response.items[0].value
+        == "asidj123123jsdsidjsid123sidsidj123sss123s224212312312312312sdaas"
+    )
