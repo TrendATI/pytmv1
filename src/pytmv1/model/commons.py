@@ -125,10 +125,20 @@ class Error(BaseModel):
 
 
 class ExceptionObject(BaseConsumable):
-    url: str
+    value: str
     type: ObjectType
     last_modified_date_time: str
     description: Optional[str]
+
+    def __init__(self, **data: str) -> None:
+        super().__init__(value=self._obj_value(data), **data)
+
+    @staticmethod
+    def _obj_value(args: Dict[str, str]) -> str:
+        obj_value: Optional[str] = args.get(args.get("type", ""))
+        if obj_value is None:
+            raise ValueError("Object value not found")
+        return obj_value
 
 
 class ImpactScope(BaseModel):

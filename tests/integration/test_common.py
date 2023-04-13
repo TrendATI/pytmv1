@@ -7,8 +7,8 @@ from pytmv1 import (
 )
 
 
-def test_test_connectivity(client):
-    assert client.test_connectivity()
+def test_check_connectivity(client):
+    assert client.check_connectivity()
 
 
 def test_get_base_task_result(client):

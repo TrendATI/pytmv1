@@ -74,12 +74,12 @@ class AddAlertNoteResp(BaseResponse):
 
 
 class BlockListTaskResp(BaseTaskResp):
-    object_type: str
-    object_value: str
+    type: ObjectType
+    value: str
 
     def __init__(self, **data: str) -> None:
         obj: Tuple[str, str] = self._map(data)
-        super().__init__(objectType=obj[0], objectValue=obj[1], **data)
+        super().__init__(type=obj[0], value=obj[1], **data)
 
     @staticmethod
     def _map(args: Dict[str, str]) -> Tuple[str, str]:
