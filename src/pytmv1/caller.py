@@ -329,7 +329,7 @@ class Client:
         self,
         alert_id: str,
         status: InvestigationStatus,
-        if_match: Optional[str] = None,
+        if_match: str,
     ) -> Result[NoContentResp]:
         """Edit the status of an alert or investigation triggered in Workbench.
 
@@ -339,7 +339,7 @@ class Client:
         :type status: InvestigationStatus
         :param if_match: Target resource will be updated only if
          it matches ETag of the target one.
-        :type if_match: Optional[str]
+        :type if_match: str
         :rtype: Result[NoContentResp]:
         """
         return self._core.send(
@@ -347,7 +347,7 @@ class Client:
             Api.EDIT_ALERT_STATUS.value.format(alert_id),
             HttpMethod.PATCH,
             json={"investigationStatus": status},
-            headers=utils.filter_none({"If-Match": if_match}),
+            headers={"If-Match": '"' + if_match + '"'},
         )
 
     def enable_account(self, *accounts: AccountTask) -> MultiResult[MultiResp]:
@@ -754,7 +754,7 @@ class Client:
             Api.TERMINATE_ENDPOINT_PROCESS, *processes
         )
 
-    def test_connectivity(self) -> Result[ConnectivityResp]:
+    def check_connectivity(self) -> Result[ConnectivityResp]:
         """Checks the connection to the API service
         and verifies if your authentication token is valid.
 
