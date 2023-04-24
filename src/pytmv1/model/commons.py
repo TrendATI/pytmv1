@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic.utils import to_lower_camel
@@ -246,7 +246,20 @@ class SandboxSuspiciousObject(BaseModel):
     analysis_completion_date_time: str
     expired_date_time: str
     root_sha1: str
-    ip: str
+    type: ObjectType
+    value: str
+
+    def __init__(self, **data: str) -> None:
+        obj: Tuple[str, str] = self._map(data)
+        super().__init__(type=obj[0], value=obj[1], **data)
+
+    @staticmethod
+    def _map(args: Dict[str, str]) -> Tuple[str, str]:
+        return {
+            (k, v)
+            for k, v in args.items()
+            if k in map(lambda ot: ot.value, ObjectType)
+        }.pop()
 
 
 class SuspiciousObject(ExceptionObject):
