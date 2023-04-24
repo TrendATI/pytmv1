@@ -193,7 +193,8 @@ def test_parse_data_with_json():
         response.items[0].root_sha1
         == "fb5608fa03de204a12fe1e9e5275e4a682107471"
     )
-    assert response.items[0].ip == "6.6.6.6"
+    assert response.items[0].type == "ip"
+    assert response.items[0].value == "6.6.6.6"
 
 
 def test_parse_data_with_multi_and_wrong_model_is_failed():

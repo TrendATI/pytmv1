@@ -94,6 +94,8 @@ def test_get_sandbox_suspicious_list(client):
     assert isinstance(result.response, SandboxSuspiciousListResp)
     assert result.result_code == ResultCode.SUCCESS
     assert len(result.response.items) > 0
+    assert result.response.items[0].type == "ip"
+    assert result.response.items[0].value == "6.6.6.6"
 
 
 def test_download_sandbox_analysis_result(client):
