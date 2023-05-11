@@ -49,10 +49,12 @@ class Iam(str, Enum):
 
 
 class InvestigationStatus(str, Enum):
-    NEW = "New"
-    IN_PROGRESS = "In Progress"
-    TRUE_POSITIVE = "True Positive"
+    BENIGN_TRUE_POSITIVE = "Benign True Positive"
+    CLOSED = "Closed"
     FALSE_POSITIVE = "False Positive"
+    IN_PROGRESS = "In Progress"
+    NEW = "New"
+    TRUE_POSITIVE = "True Positive"
 
 
 class EntityType(str, Enum):
