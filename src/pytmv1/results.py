@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import time
 from dataclasses import dataclass, field
 from enum import Enum
@@ -10,7 +11,6 @@ from typing import Any, Callable, Generic, List, Optional, TypeVar
 from pydantic import ValidationError
 from requests import RequestException
 
-from . import logger
 from .exceptions import ServerCustError, ServerJsonError, ServerMultiJsonError
 from .model.commons import Error, MsError
 from .model.responses import MR, R
@@ -18,7 +18,7 @@ from .model.responses import MR, R
 E = TypeVar("E", bound=Error)
 F = TypeVar("F", bound=Callable[..., Any])
 
-log: Logger = logger.get_logger(__name__)
+log: Logger = logging.getLogger(__name__)
 
 
 def multi_result(func: F) -> Callable[..., MultiResult[MR]]:
