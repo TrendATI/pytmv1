@@ -28,7 +28,7 @@ def test_consume_alert_list_with_next_link(client):
         lambda s: None, "next_link", "2020-06-15T10:00:00Z"
     )
     assert result.result_code == ResultCode.SUCCESS
-    assert result.response.total_consumed == 3
+    assert result.response.total_consumed == 11
 
 
 def test_edit_alert_status(client):

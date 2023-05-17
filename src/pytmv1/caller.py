@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import logging
 from functools import lru_cache
 from logging import Logger
 from typing import Callable, Optional, Type, Union
 
-from . import logger, utils
+from . import utils
 from .core import DEFAULT_POLL_TIME, Core
 from .model.commons import (
     Endpoint,
@@ -46,7 +47,7 @@ from .model.responses import (
 )
 from .results import MultiResult, Result
 
-log: Logger = logger.get_logger(__name__)
+log: Logger = logging.getLogger(__name__)
 
 
 def client(
@@ -347,7 +348,13 @@ class Client:
             Api.EDIT_ALERT_STATUS.value.format(alert_id),
             HttpMethod.PATCH,
             json={"investigationStatus": status},
-            headers={"If-Match": '"' + if_match + '"'},
+            headers={
+                "If-Match": (
+                    if_match
+                    if if_match.startswith('"')
+                    else '"' + if_match + '"'
+                )
+            },
         )
 
     def enable_account(self, *accounts: AccountTask) -> MultiResult[MultiResp]:
