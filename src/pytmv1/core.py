@@ -1,3 +1,4 @@
+import logging
 import re
 import time
 from logging import Logger
@@ -9,7 +10,6 @@ from pydantic import AnyHttpUrl, parse_obj_as
 from requests import PreparedRequest, Request, Response
 from requests.adapters import HTTPAdapter
 
-from . import logger
 from .__about__ import __version__
 from .exceptions import (
     ParseModelError,
@@ -53,7 +53,7 @@ DEFAULT_POLL_TIME: float = 1800
 CONNECT_TIMEOUT: int = 5
 READ_TIMEOUT: int = 30
 
-log: Logger = logger.get_logger(__name__)
+log: Logger = logging.getLogger(__name__)
 
 
 class Core:
