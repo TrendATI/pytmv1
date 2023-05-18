@@ -428,12 +428,12 @@ def test_status():
 
 
 def test_url_with_trailing_slash():
-    test_core = Core("", "", "https://dummy/", 0, 0)
+    test_core = Core("", "", "https://dummy/", 0, 0, 30, 30)
     assert test_core._url == "https://dummy/" + API_VERSION
 
 
 def test_url_without_trailing_slash(core):
-    test_core = Core("", "", "https://dummy", 0, 0)
+    test_core = Core("", "", "https://dummy", 0, 0, 30, 30)
     assert test_core._url == "https://dummy/" + API_VERSION
 
 
