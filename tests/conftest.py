@@ -28,7 +28,13 @@ def client(pytestconfig):
 @pytest.fixture(scope="package")
 def core(pytestconfig):
     return Core(
-        "appname", "token", _default(pytestconfig.getoption("mock-url")), 0, 0
+        "appname",
+        "token",
+        _default(pytestconfig.getoption("mock-url")),
+        0,
+        0,
+        30,
+        30,
     )
 
 

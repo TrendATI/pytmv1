@@ -49,9 +49,6 @@ from .results import multi_result, result
 
 USERAGENT_SUFFIX: str = "PyTMV1"
 API_VERSION: str = "v3.0"
-DEFAULT_POLL_TIME: float = 1800
-CONNECT_TIMEOUT: int = 5
-READ_TIMEOUT: int = 30
 
 log: Logger = logging.getLogger(__name__)
 
@@ -64,8 +61,12 @@ class Core:
         url: str,
         pool_connections: int,
         pool_maxsize: int,
+        connect_timeout: int,
+        read_timeout: int,
     ):
         self._adapter = HTTPAdapter(pool_connections, pool_maxsize, 0, True)
+        self._c_timeout = connect_timeout
+        self._r_timeout = read_timeout
         self._appname = appname
         self._token = token
         self._url = parse_obj_as(AnyHttpUrl, _format(url))
@@ -246,7 +247,7 @@ class Core:
             ),
         )
         response: Response = self._adapter.send(
-            request, stream=False, timeout=(CONNECT_TIMEOUT, READ_TIMEOUT)
+            request, timeout=(self._c_timeout, self._r_timeout)
         )
         log.info(
             "Received response [Status=%s, Headers=%s, Body=%s]",
