@@ -6,7 +6,7 @@ from logging import Logger
 from typing import Callable, Optional, Type, Union
 
 from . import utils
-from .core import DEFAULT_POLL_TIME, Core
+from .core import Core
 from .model.commons import (
     Endpoint,
     ExceptionObject,
@@ -56,6 +56,8 @@ def client(
     url: str,
     pool_connections: int = 1,
     pool_maxsize: int = 1,
+    connect_timeout: int = 30,
+    read_timeout: int = 30,
 ) -> Client:
     """Helper function to initialize a :class:`Client`.
 
@@ -65,10 +67,14 @@ def client(
     :type token: str
     :param url: Vision One API url this client connects to.
     :type url: str
-    :param pool_connections: Number of connection pools to cache.
+    :param pool_connections: (optional) Number of connection to cache.
     :type pool_connections: int
-    :param pool_maxsize: Maximum size of the pool.
+    :param pool_maxsize: (optional) Maximum size of the pool.
     :type pool_maxsize: int
+    :param connect_timeout: (optional) Seconds before connection timeout.
+    :type connect_timeout: int
+    :param read_timeout: (optional) Seconds before read timeout.
+    :type connect_timeout: int
     :rtype: Client
     """
     log.debug(
@@ -76,7 +82,17 @@ def client(
         name,
         url,
     )
-    return Client(Core(name, token, url, pool_connections, pool_maxsize))
+    return Client(
+        Core(
+            name,
+            token,
+            url,
+            pool_connections,
+            pool_maxsize,
+            connect_timeout,
+            read_timeout,
+        )
+    )
 
 
 @lru_cache(maxsize=None)
@@ -278,7 +294,7 @@ class Client:
         self,
         submit_id: str,
         poll: bool = True,
-        poll_time_sec: float = DEFAULT_POLL_TIME,
+        poll_time_sec: float = 1800,
     ) -> Result[BytesResp]:
         """Downloads the analysis results of the specified object as PDF.
 
@@ -304,7 +320,7 @@ class Client:
         self,
         submit_id: str,
         poll: bool = True,
-        poll_time_sec: float = DEFAULT_POLL_TIME,
+        poll_time_sec: float = 1800,
     ) -> Result[BytesResp]:
         """Downloads the Investigation Package of the specified object.
 
@@ -412,7 +428,7 @@ class Client:
         self,
         task_id: str,
         poll: bool = True,
-        poll_time_sec: float = DEFAULT_POLL_TIME,
+        poll_time_sec: float = 1800,
     ) -> Result[BaseTaskResp]:
         """Retrieves the result of a response task.
 
@@ -459,7 +475,7 @@ class Client:
         self,
         submit_id: str,
         poll: bool = True,
-        poll_time_sec: float = DEFAULT_POLL_TIME,
+        poll_time_sec: float = 1800,
     ) -> Result[SandboxAnalysisResultResp]:
         """Retrieves the analysis results of the specified object.
 
@@ -499,7 +515,7 @@ class Client:
         self,
         submit_id: str,
         poll: bool = True,
-        poll_time_sec: float = DEFAULT_POLL_TIME,
+        poll_time_sec: float = 1800,
     ) -> Result[SandboxSuspiciousListResp]:
         """Retrieves the suspicious object list associated to the
         specified object.
@@ -536,7 +552,7 @@ class Client:
         task_id: str,
         class_: Type[S],
         poll: bool = True,
-        poll_time_sec: float = DEFAULT_POLL_TIME,
+        poll_time_sec: float = 1800,
     ) -> Result[S]:
         """Retrieves the result of a response task.
 
