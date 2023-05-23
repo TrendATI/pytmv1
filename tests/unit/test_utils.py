@@ -32,14 +32,14 @@ def test_endpoint_query_field():
 def test_endpoint_query_with_endpoint_name():
     assert (
         utils.endpoint_query(QueryOp.AND, "dummy").get("TMV1-Query")
-        == "(endpointName:'dummy' or loginAccount:'dummy')"
+        == "(endpointName eq 'dummy' or loginAccount eq 'dummy')"
     )
 
 
 def test_endpoint_query_with_ip():
     assert (
         utils.endpoint_query(QueryOp.AND, "1.1.1.1").get("TMV1-Query")
-        == "(ip:'1.1.1.1')"
+        == "(ip eq '1.1.1.1')"
     )
 
 
@@ -48,8 +48,8 @@ def test_endpoint_query_with_login_account():
         utils.endpoint_query(QueryOp.AND, "DOMAIN\\Name_Lastname").get(
             "TMV1-Query"
         )
-        == "(endpointName:'DOMAIN\\Name_Lastname' or"
-        " loginAccount:'DOMAIN\\Name_Lastname')"
+        == "(endpointName eq 'DOMAIN\\Name_Lastname' or"
+        " loginAccount eq 'DOMAIN\\Name_Lastname')"
     )
 
 
@@ -58,7 +58,7 @@ def test_endpoint_query_with_mac_address():
         utils.endpoint_query(QueryOp.AND, "A1-7B-A5-63-16-F8").get(
             "TMV1-Query"
         )
-        == "(macAddress:'A1-7B-A5-63-16-F8')"
+        == "(macAddress eq 'A1-7B-A5-63-16-F8')"
     )
 
 
@@ -69,7 +69,7 @@ def test_endpoint_query_with_multiple_os_name_or_operator():
             OperatingSystem.WINDOWS.value,
             OperatingSystem.LINUX.value,
         ).get("TMV1-Query")
-        == "(osName:'Windows') or (osName:'Linux')"
+        == "(osName eq 'Windows') or (osName eq 'Linux')"
     )
 
 
@@ -78,8 +78,8 @@ def test_endpoint_query_with_product_code_os_name_and_operator():
         utils.endpoint_query(
             QueryOp.AND, ProductCode.SAO.value, OperatingSystem.WINDOWS.value
         ).get("TMV1-Query")
-        == "(productCode:'sao' or installedProductCodes:'sao') and"
-        " (osName:'Windows')"
+        == "(productCode eq 'sao' or installedProductCodes eq 'sao') and"
+        " (osName eq 'Windows')"
     )
 
 
@@ -88,7 +88,7 @@ def test_endpoint_query_with_os_name():
         utils.endpoint_query(QueryOp.AND, OperatingSystem.WINDOWS.value).get(
             "TMV1-Query"
         )
-        == "(osName:'Windows')"
+        == "(osName eq 'Windows')"
     )
 
 
@@ -97,7 +97,7 @@ def test_endpoint_query_with_product_code():
         utils.endpoint_query(QueryOp.AND, ProductCode.SAO.value).get(
             "TMV1-Query"
         )
-        == "(productCode:'sao' or installedProductCodes:'sao')"
+        == "(productCode eq 'sao' or installedProductCodes eq 'sao')"
     )
 
 
