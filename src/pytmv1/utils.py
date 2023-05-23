@@ -65,7 +65,8 @@ def endpoint_query(op: QueryOp, *values: str) -> Dict[str, str]:
         "TMV1-Query": op.join(
             "("
             + QueryOp.OR.join(
-                f"{qt.value}:'{value}'" for qt in endpoint_query_field(value)
+                f"{qt.value} eq '{value}'"
+                for qt in endpoint_query_field(value)
             )
             + ")"
             for value in values
