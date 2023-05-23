@@ -189,8 +189,7 @@ class Core:
             return self._consume_linkable(
                 lambda: self._process(
                     type(response),
-                    sr.path[5:],
-                    params={"skipToken": sr.query.split("=")[-1]},
+                    sr.path[5:] + f"?skipToken={sr.query.split('=')[-1]}",
                 ),
                 consumer,
                 total_count,
