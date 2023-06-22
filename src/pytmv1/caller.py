@@ -50,6 +50,7 @@ from .results import MultiResult, Result
 log: Logger = logging.getLogger(__name__)
 
 
+@lru_cache(maxsize=None)
 def client(
     name: str,
     token: str,
@@ -95,7 +96,6 @@ def client(
     )
 
 
-@lru_cache(maxsize=None)
 class Client:
     def __init__(self, core: Core):
         self._core = core
