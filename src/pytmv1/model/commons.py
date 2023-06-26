@@ -23,7 +23,7 @@ from .enums import (
 class BaseModel(PydanticBaseModel):
     class Config:
         alias_generator = to_lower_camel
-        allow_populate_by_field_name = True
+        allow_population_by_field_name = True
 
 
 class BaseConsumable(BaseModel):
