@@ -1,7 +1,7 @@
 from pytmv1 import (
     BaseTaskResp,
     CollectFileTaskResp,
-    EmailMessageUIdTask,
+    EmailMessageIdTask,
     ResultCode,
     Status,
 )
@@ -29,7 +29,9 @@ def test_collect_file_task_result(client):
 
 
 def test_collect_file_task_result_is_failed(client):
-    result = client.get_task_result("failed", CollectFileTaskResp, False)
+    result = client.get_task_result(
+        "internal_error", CollectFileTaskResp, False
+    )
     assert not result.response
     assert result.result_code == ResultCode.ERROR
     assert result.error.code == "InternalServerError"
@@ -46,7 +48,7 @@ def test_collect_file_task_result_is_bad_request(client):
 
 def test_multi_status_is_failed(client):
     result = client.delete_email_message(
-        EmailMessageUIdTask(uniqueId="multi_failed")
+        EmailMessageIdTask(messageId="internal_server_error")
     )
     assert not result.response
     assert result.result_code == ResultCode.ERROR
@@ -56,7 +58,7 @@ def test_multi_status_is_failed(client):
 
 def test_multi_status_is_bad_request(client):
     result = client.delete_email_message(
-        EmailMessageUIdTask(uniqueId="multi_bad_request")
+        EmailMessageIdTask(messageId="fields_not_found")
     )
     assert not result.response
     assert result.result_code == ResultCode.ERROR
@@ -66,7 +68,7 @@ def test_multi_status_is_bad_request(client):
 
 def test_multi_status_is_denied(client):
     result = client.delete_email_message(
-        EmailMessageUIdTask(uniqueId="multi_denied")
+        EmailMessageIdTask(messageId="insufficient_permissions")
     )
     assert not result.response
     assert result.result_code == ResultCode.ERROR
@@ -76,7 +78,7 @@ def test_multi_status_is_denied(client):
 
 def test_multi_status_is_not_supported(client):
     result = client.delete_email_message(
-        EmailMessageUIdTask(uniqueId="multi_not_supported")
+        EmailMessageIdTask(messageId="action_not_supported")
     )
     assert not result.response
     assert result.result_code == ResultCode.ERROR
@@ -86,7 +88,7 @@ def test_multi_status_is_not_supported(client):
 
 def test_multi_status_is_task_error(client):
     result = client.delete_email_message(
-        EmailMessageUIdTask(uniqueId="multi_task_error")
+        EmailMessageIdTask(messageId="task_duplication")
     )
     assert not result.response
     assert result.result_code == ResultCode.ERROR
