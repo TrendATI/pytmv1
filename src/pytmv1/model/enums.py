@@ -44,8 +44,10 @@ class Api(str, Enum):
 
 
 class Iam(str, Enum):
-    AAD = "Azure AD"
-    OPAD = "On-premise AD"
+    # Azure AD
+    AAD = "AAD"
+    # On-premise AD
+    OPAD = "OPAD"
 
 
 class InvestigationStatus(str, Enum):
