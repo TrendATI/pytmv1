@@ -1,8 +1,8 @@
-from pytmv1 import EmailMessageUIdTask, ResultCode
+from pytmv1 import EmailMessageIdTask, ResultCode
 
 
 def test_delete_email_message(client):
-    result = client.delete_email_message(EmailMessageUIdTask(uniqueId="1"))
+    result = client.delete_email_message(EmailMessageIdTask(messageId="1"))
     assert result.result_code == ResultCode.SUCCESS
     assert len(result.response.items) > 0
     assert result.response.items[0].status == 202
@@ -10,7 +10,7 @@ def test_delete_email_message(client):
 
 def test_delete_email_message_is_failed(client):
     result = client.delete_email_message(
-        EmailMessageUIdTask(uniqueId="failed")
+        EmailMessageIdTask(messageId="server_error")
     )
     assert result.result_code == ResultCode.ERROR
     assert result.errors[0].status == 500
@@ -19,7 +19,7 @@ def test_delete_email_message_is_failed(client):
 
 def test_delete_email_message_is_bad_request(client):
     result = client.delete_email_message(
-        EmailMessageUIdTask(uniqueId="bad_request")
+        EmailMessageIdTask(messageId="invalid_format")
     )
     assert result.result_code == ResultCode.ERROR
     assert result.errors[0].code == "BadRequest"
@@ -28,7 +28,7 @@ def test_delete_email_message_is_bad_request(client):
 
 def test_delete_email_message_is_denied(client):
     result = client.delete_email_message(
-        EmailMessageUIdTask(uniqueId="denied")
+        EmailMessageIdTask(messageId="access_denied")
     )
     assert result.result_code == ResultCode.ERROR
     assert result.errors[0].code == "AccessDenied"
@@ -36,14 +36,14 @@ def test_delete_email_message_is_denied(client):
 
 
 def test_quarantine_email_message(client):
-    result = client.quarantine_email_message(EmailMessageUIdTask(uniqueId="1"))
+    result = client.quarantine_email_message(EmailMessageIdTask(messageId="1"))
     assert result.result_code == ResultCode.SUCCESS
     assert len(result.response.items) > 0
     assert result.response.items[0].status == 202
 
 
 def test_restore_email_message(client):
-    result = client.restore_email_message(EmailMessageUIdTask(uniqueId="1"))
+    result = client.restore_email_message(EmailMessageIdTask(messageId="1"))
     assert result.result_code == ResultCode.SUCCESS
     assert len(result.response.items) > 0
     assert result.response.items[0].status == 202
