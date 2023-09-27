@@ -12,15 +12,15 @@ def test_check_connectivity(client):
 
 
 def test_get_base_task_result(client):
-    result = client.get_base_task_result("00000003", False)
+    result = client.get_base_task_result("00000004", False)
     assert isinstance(result.response, BaseTaskResp)
     assert result.result_code == ResultCode.SUCCESS
     assert result.response.status == Status.SUCCEEDED
-    assert result.response.id == "00000003"
+    assert result.response.id == "00000004"
 
 
 def test_collect_file_task_result(client):
-    result = client.get_task_result("00000003", CollectFileTaskResp, False)
+    result = client.get_task_result("collect_file", CollectFileTaskResp, False)
     assert isinstance(result.response, CollectFileTaskResp)
     assert result.result_code == ResultCode.SUCCESS
     assert result.response.status == Status.SUCCEEDED
