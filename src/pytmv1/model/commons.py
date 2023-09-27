@@ -244,7 +244,7 @@ class MatchedIndicatorPattern(BaseModel):
     id: str
     pattern: str
     tags: List[str]
-    matched_logs: List[str]
+    matched_logs: List[str] = Field(default=[])
 
 
 class MatchedRule(BaseModel):
