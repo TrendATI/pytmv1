@@ -4,13 +4,37 @@ from typing import Any, Dict, List, Optional, Pattern, Tuple
 
 from pydantic import IPvAnyAddress, IPvAnyAddressError
 
-from .model.enums import OperatingSystem, ProductCode, QueryField, QueryOp
+from .model.enums import (
+    OperatingSystem,
+    ProductCode,
+    QueryField,
+    QueryOp,
+    SearchMode,
+)
 from .model.requests import ObjectTask, SuspiciousObjectTask
 
 MAC_ADDRESS_PATTERN: Pattern[str] = re.compile(
     "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
 )
 GUID_PATTERN: Pattern[str] = re.compile("^(\\w+-+){1,5}\\w+$")
+
+
+def build_activity_request(
+    start_time: Optional[str],
+    end_time: Optional[str],
+    select: Optional[List[str]],
+    top: int,
+    search_mode: SearchMode,
+) -> Dict[str, str]:
+    return filter_none(
+        {
+            "startDateTime": start_time,
+            "endDateTime": end_time,
+            "select": ",".join(select) if select else select,
+            "top": top,
+            "mode": search_mode,
+        }
+    )
 
 
 def build_object_request(*tasks: ObjectTask) -> List[Dict[str, str]]:
@@ -58,6 +82,10 @@ def build_suspicious_request(
         )
         for task in tasks
     ]
+
+
+def activity_query(op: QueryOp, **fields: str) -> Dict[str, str]:
+    return {"TMV1-Query": op.join([f"{k}:'{v}'" for k, v in fields.items()])}
 
 
 def endpoint_query(op: QueryOp, *values: str) -> Dict[str, str]:

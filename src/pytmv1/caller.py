@@ -3,18 +3,26 @@ from __future__ import annotations
 import logging
 from functools import lru_cache
 from logging import Logger
-from typing import Callable, Optional, Type, Union
+from typing import Callable, List, Optional, Type, Union
 
 from . import utils
 from .core import Core
 from .model.commons import (
+    EmailActivity,
     Endpoint,
+    EndpointActivity,
     ExceptionObject,
     SaeAlert,
     SuspiciousObject,
     TiAlert,
 )
-from .model.enums import Api, HttpMethod, InvestigationStatus, QueryOp
+from .model.enums import (
+    Api,
+    HttpMethod,
+    InvestigationStatus,
+    QueryOp,
+    SearchMode,
+)
 from .model.requests import (
     AccountTask,
     EmailMessageIdTask,
@@ -33,6 +41,10 @@ from .model.responses import (
     ConsumeLinkableResp,
     GetAlertDetailsResp,
     GetAlertListResp,
+    GetEmailActivityDataCountResp,
+    GetEmailActivityDataResp,
+    GetEndpointActivityDataCountResp,
+    GetEndpointActivityDataResp,
     GetEndpointDataResp,
     GetExceptionListResp,
     GetSuspiciousListResp,
@@ -182,6 +194,8 @@ class Client:
     ) -> Result[ConsumeLinkableResp]:
         """Retrieves and consume workbench alerts.
 
+        :param consumer: Function which will consume every record in result.
+        :type consumer: Callable[[Union[SaeAlert, TiAlert]], None]
         :param start_time: Date that indicates the start of the data retrieval
         time range (yyyy-MM-ddThh:mm:ssZ in UTC).
         Defaults to 24 hours before the request is made.
@@ -190,8 +204,6 @@ class Client:
         time range (yyyy-MM-ddThh:mm:ssZ in UTC).
         Defaults to the time the request is made.
         :type end_time: Optional[str]
-        :param consumer: Function which will consume every record in result.
-        :type consumer: Callable[[Union[SaeAlert, TiAlert]], None]
         :rtype: Result[ConsumeLinkableResp]:
         """
         return self._core.send_linkable(
@@ -201,6 +213,104 @@ class Client:
             params=utils.filter_none(
                 {"startDateTime": start_time, "endDateTime": end_time}
             ),
+        )
+
+    def consume_email_activity_data(
+        self,
+        consumer: Callable[[EmailActivity], None],
+        start_time: Optional[str] = None,
+        end_time: Optional[str] = None,
+        select: Optional[List[str]] = None,
+        top: int = 500,
+        op: QueryOp = QueryOp.AND,
+        **fields: str,
+    ) -> Result[ConsumeLinkableResp]:
+        """Retrieves and consume email activity data in a paginated list
+         filtered by provided values.
+
+        :param consumer: Function which will consume every record in result.
+        :type consumer: Callable[[EmailActivity], None]
+        :param start_time: Date that indicates the start of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to 24 hours before the request is made.
+        :type start_time: Optional[str]
+        :param end_time: Date that indicates the end of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to the time the request is made.
+        :type end_time: Optional[str]
+        :param select: List of fields to include in the search results,
+        if no fields are specified, the query returns all supported fields.
+        :type select: Optional[List[str]]
+        :param top: Number of records fetched per page.
+        :type top: int
+        :param op: Operator to apply between fields (ie: uuid=... OR tags=...)
+        :type op: QueryOp
+        :param fields: Field/value used to filter result (ie: uuid="123456")
+        check Vision One API documentation for full list of supported fields.
+        :type fields: Dict[str, str]
+        :rtype: Result[ConsumeLinkableResp]:
+        """
+        return self._core.send_linkable(
+            GetEmailActivityDataResp,
+            Api.GET_EMAIL_ACTIVITY_DATA,
+            consumer,
+            params=utils.build_activity_request(
+                start_time,
+                end_time,
+                select,
+                top,
+                SearchMode.DEFAULT,
+            ),
+            headers=utils.activity_query(op, **fields),
+        )
+
+    def consume_endpoint_activity_data(
+        self,
+        consumer: Callable[[EndpointActivity], None],
+        start_time: Optional[str] = None,
+        end_time: Optional[str] = None,
+        select: Optional[List[str]] = None,
+        top: int = 500,
+        op: QueryOp = QueryOp.AND,
+        **fields: str,
+    ) -> Result[ConsumeLinkableResp]:
+        """Retrieves and consume endpoint activity data in a paginated list
+         filtered by provided values.
+
+        :param consumer: Function which will consume every record in result.
+        :type consumer: Callable[[EndpointActivity], None]
+        :param start_time: Date that indicates the start of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to 24 hours before the request is made.
+        :type start_time: Optional[str]
+        :param end_time: Date that indicates the end of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to the time the request is made.
+        :type end_time: Optional[str]
+        :param select: List of fields to include in the search results,
+        if no fields are specified, the query returns all supported fields.
+        :type select: Optional[List[str]]
+        :param top: Number of records fetched per page.
+        :type top: int
+        :param op: Operator to apply between fields (ie: dpt=... OR src=...)
+        :type op: QueryOp
+        :param fields: Field/value used to filter result (ie: dpt="443")
+        check Vision One API documentation for full list of supported fields.
+        :type fields: Dict[str, str]
+        :rtype: Result[ConsumeLinkableResp]:
+        """
+        return self._core.send_linkable(
+            GetEndpointActivityDataResp,
+            Api.GET_ENDPOINT_ACTIVITY_DATA,
+            consumer,
+            params=utils.build_activity_request(
+                start_time,
+                end_time,
+                select,
+                top,
+                SearchMode.DEFAULT,
+            ),
+            headers=utils.activity_query(op, **fields),
         )
 
     def consume_endpoint_data(
@@ -444,6 +554,186 @@ class Client:
         """
         return self._core.send_task_result(
             BaseTaskResp, task_id, poll, poll_time_sec
+        )
+
+    def get_email_activity_data(
+        self,
+        start_time: Optional[str] = None,
+        end_time: Optional[str] = None,
+        select: Optional[List[str]] = None,
+        top: int = 500,
+        op: QueryOp = QueryOp.AND,
+        **fields: str,
+    ) -> Result[GetEmailActivityDataResp]:
+        """Retrieves email activity data in a paginated list
+         filtered by provided values.
+
+        :param start_time: Date that indicates the start of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to 24 hours before the request is made.
+        :type start_time: Optional[str]
+        :param end_time: Date that indicates the end of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to the time the request is made.
+        :type end_time: Optional[str]
+        :param select: List of fields to include in the search results,
+        if no fields are specified, the query returns all supported fields.
+        :type select: Optional[List[str]]
+        :param top: Number of records fetched per page.
+        :type top: int
+        :param op: Operator to apply between fields (ie: uuid=... OR tags=...)
+        :type op: QueryOp
+        :param fields: Field/value used to filter result (ie: uuid="123456")
+        check Vision One API documentation for full list of supported fields.
+        :type fields: Dict[str, str]
+        :rtype: Result[GetEmailActivityDataResp]:
+        """
+        return self._core.send(
+            GetEmailActivityDataResp,
+            Api.GET_EMAIL_ACTIVITY_DATA,
+            params=utils.build_activity_request(
+                start_time,
+                end_time,
+                select,
+                top,
+                SearchMode.DEFAULT,
+            ),
+            headers=utils.activity_query(op, **fields),
+        )
+
+    def get_email_activity_data_count(
+        self,
+        start_time: Optional[str] = None,
+        end_time: Optional[str] = None,
+        select: Optional[List[str]] = None,
+        top: int = 500,
+        op: QueryOp = QueryOp.AND,
+        **fields: str,
+    ) -> Result[GetEmailActivityDataCountResp]:
+        """Retrieves the count of email activity data in a paginated list
+         filtered by provided values.
+
+        :param start_time: Date that indicates the start of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to 24 hours before the request is made.
+        :type start_time: Optional[str]
+        :param end_time: Date that indicates the end of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to the time the request is made.
+        :type end_time: Optional[str]
+        :param select: List of fields to include in the search results,
+        if no fields are specified, the query returns all supported fields.
+        :type select: Optional[List[str]]
+        :param top: Number of records fetched per page.
+        :type top: int
+        :param op: Operator to apply between fields (ie: uuid=... OR tags=...)
+        :type op: QueryOp
+        :param fields: Field/value used to filter result (ie: uuid="123456")
+        check Vision One API documentation for full list of supported fields.
+        :type fields: Dict[str, str]
+        :rtype: Result[GetEmailActivityDataCountResp]:
+        """
+        return self._core.send(
+            GetEmailActivityDataCountResp,
+            Api.GET_EMAIL_ACTIVITY_DATA,
+            params=utils.build_activity_request(
+                start_time,
+                end_time,
+                select,
+                top,
+                SearchMode.COUNT_ONLY,
+            ),
+            headers=utils.activity_query(op, **fields),
+        )
+
+    def get_endpoint_activity_data(
+        self,
+        start_time: Optional[str] = None,
+        end_time: Optional[str] = None,
+        select: Optional[List[str]] = None,
+        top: int = 500,
+        op: QueryOp = QueryOp.AND,
+        **fields: str,
+    ) -> Result[GetEndpointActivityDataResp]:
+        """Retrieves endpoint activity data in a paginated list
+         filtered by provided values.
+
+        :param start_time: Date that indicates the start of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to 24 hours before the request is made.
+        :type start_time: Optional[str]
+        :param end_time: Date that indicates the end of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to the time the request is made.
+        :type end_time: Optional[str]
+        :param select: List of fields to include in the search results,
+        if no fields are specified, the query returns all supported fields.
+        :type select: Optional[List[str]]
+        :param top: Number of records fetched per page.
+        :type top: int
+        :param op: Operator to apply between fields (ie: dpt=... OR src=...)
+        :type op: QueryOp
+        :param fields: Field/value used to filter result (ie: dpt="443")
+        check Vision One API documentation for full list of supported fields.
+        :type fields: Dict[str, str]
+        :rtype: Result[GetEndpointActivityDataResp]:
+        """
+        return self._core.send(
+            GetEndpointActivityDataResp,
+            Api.GET_ENDPOINT_ACTIVITY_DATA,
+            params=utils.build_activity_request(
+                start_time,
+                end_time,
+                select,
+                top,
+                SearchMode.DEFAULT,
+            ),
+            headers=utils.activity_query(op, **fields),
+        )
+
+    def get_endpoint_activity_data_count(
+        self,
+        start_time: Optional[str] = None,
+        end_time: Optional[str] = None,
+        select: Optional[List[str]] = None,
+        top: int = 500,
+        op: QueryOp = QueryOp.AND,
+        **fields: str,
+    ) -> Result[GetEndpointActivityDataCountResp]:
+        """Retrieves the count of endpoint activity data in a paginated list
+        filtered by provided values.
+
+        :param start_time: Date that indicates the start of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to 24 hours before the request is made.
+        :type start_time: Optional[str]
+        :param end_time: Date that indicates the end of the data retrieval
+        time range (yyyy-MM-ddThh:mm:ssZ in UTC).
+        Defaults to the time the request is made.
+        :type end_time: Optional[str]
+        :param select: List of fields to include in the search results,
+        if no fields are specified, the query returns all supported fields.
+        :type select: Optional[List[str]]
+        :param top: Number of records fetched per page.
+        :type top: int
+        :param op: Operator to apply between fields (ie: dpt=... OR src=...)
+        :type op: QueryOp
+        :param fields: Field/value used to filter result (ie: dpt="443")
+        check Vision One API documentation for full list of supported fields.
+        :type fields: Dict[str, str]
+        :rtype: Result[GetEndpointActivityDataCountResp]:
+        """
+        return self._core.send(
+            GetEndpointActivityDataCountResp,
+            Api.GET_ENDPOINT_ACTIVITY_DATA,
+            params=utils.build_activity_request(
+                start_time,
+                end_time,
+                select,
+                top,
+                SearchMode.COUNT_ONLY,
+            ),
+            headers=utils.activity_query(op, **fields),
         )
 
     def get_endpoint_data(

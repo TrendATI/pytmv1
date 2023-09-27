@@ -19,6 +19,8 @@ class Api(str, Enum):
     ISOLATE_ENDPOINT = "/response/endpoints/isolate"
     GET_ALERT_DETAILS = "/workbench/alerts/{0}"
     GET_ALERT_LIST = "/workbench/alerts"
+    GET_EMAIL_ACTIVITY_DATA = "/search/emailActivities"
+    GET_ENDPOINT_ACTIVITY_DATA = "/search/endpointActivities"
     GET_ENDPOINT_DATA = "/eiqs/endpoints"
     GET_EXCEPTION_LIST = "/threatintel/suspiciousObjectExceptions"
     GET_SANDBOX_SUBMISSION_STATUS = "/sandbox/tasks/{0}"
@@ -50,6 +52,14 @@ class Iam(str, Enum):
     OPAD = "OPAD"
 
 
+class IntegrityLevel(int, Enum):
+    UNTRUSTED = 0
+    LOW = 4096
+    MEDIUM = 8192
+    HIGH = 12288
+    SYSTEM = 16384
+
+
 class InvestigationStatus(str, Enum):
     BENIGN_TRUE_POSITIVE = "Benign True Positive"
     CLOSED = "Closed"
@@ -63,6 +73,71 @@ class EntityType(str, Enum):
     HOST = "host"
     ACCOUNT = "account"
     EMAIL_ADDRESS = "emailAddress"
+
+
+class EventID(str, Enum):
+    EVENT_PROCESS = "1"
+    EVENT_FILE = "2"
+    EVENT_CONNECTIO = "3"
+    EVENT_DNS = "4"
+    EVENT_REGISTRY = "5"
+    EVENT_ACCOUNT = "6"
+    EVENT_INTERNET = "7"
+    XDR_EVENT_MODIFIED_PROCESS = "8"
+    EVENT_WINDOWS_HOOK = "9"
+    EVENT_WINDOWS_EVENT = "10"
+    EVENT_AMSI = "11"
+    EVENT_WMI = "12"
+    TELEMETRY_MEMORY = "13"
+    TELEMETRY_BM = "14"
+
+
+class EventSubID(int, Enum):
+    TELEMETRY_NONE = 0
+    XDR_PROCESS_OPEN = 1
+    XDR_PROCESS_CREATE = 2
+    XDR_PROCESS_TERMINATE = 3
+    XDR_PROCESS_LOAD_IMAGE = 4
+    TELEMETRY_PROCESS_EXECUTE = 5
+    TELEMETRY_PROCESS_CONNECT = 6
+    TELEMETRY_PROCESS_TRACME = 7
+    XDR_FILE_CREATE = 101
+    XDR_FILE_OPEN = 102
+    XDR_FILE_DELETE = 103
+    XDR_FILE_SET_SECURITY = 104
+    XDR_FILE_COPY = 105
+    XDR_FILE_MOVE = 106
+    XDR_FILE_CLOSE = 107
+    TELEMETRY_FILE_MODIFY_TIMESTAMP = 108
+    TELEMETRY_FILE_MODIFY = 109
+    XDR_CONNECTION_CONNECT = 201
+    XDR_CONNECTION_LISTEN = 202
+    XDR_CONNECTION_CONNECT_INBOUND = 203
+    XDR_CONNECTION_CONNECT_OUTBOUND = 204
+    XDR_DNS_QUERY = 301
+    XDR_REGISTRY_CREATE = 401
+    XDR_REGISTRY_SET = 402
+    XDR_REGISTRY_DELETE = 403
+    XDR_REGISTRY_RENAME = 404
+    XDR_ACCOUNT_ADD = 501
+    XDR_ACCOUNT_DELETE = 502
+    XDR_ACCOUNT_IMPERSONATE = 503
+    XDR_ACCOUNT_MODIFY = 504
+    XDR_INTERNET_OPEN = 601
+    XDR_INTERNET_CONNECT = 602
+    XDR_INTERNET_DOWNLOAD = 603
+    XDR_MODIFIED_PROCESS_CREATE_REMOTETHREAD = 701
+    XDR_MODIFIED_PROCESS_WRITE_MEMORY = 702
+    TELEMETRY_MODIFIED_PROCESS_WRITE_PROCESS = 703
+    TELEMETRY_MODIFIED_PROCESS_READ_PROCESS = 704
+    TELEMETRY_MODIFIED_PROCESS_WRITE_PROCESS_NAME = 705
+    XDR_WINDOWS_HOOK_SET = 801
+    XDR_AMSI_EXECUTE = 901
+    TELEMETRY_MEMORY_MODIFY = 1001
+    TELEMETRY_MEMORY_MODIFY_PERMISSION = 1002
+    TELEMETRY_MEMORY_READ = 1003
+    TELEMETRY_BM_INVOKE = 1101
+    TELEMETRY_BM_INVOKE_API = 1102
 
 
 class HttpMethod(str, Enum):
@@ -142,6 +217,11 @@ class SandboxObjectType(str, Enum):
 class ScanAction(str, Enum):
     BLOCK = "block"
     LOG = "log"
+
+
+class SearchMode(str, Enum):
+    DEFAULT = "default"
+    COUNT_ONLY = "countOnly"
 
 
 class Severity(str, Enum):

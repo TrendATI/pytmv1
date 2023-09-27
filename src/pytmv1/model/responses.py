@@ -8,8 +8,10 @@ from .commons import (
     BaseConsumable,
     BaseModel,
     Digest,
+    EmailActivity,
     EmailMessage,
     Endpoint,
+    EndpointActivity,
     ExceptionObject,
     MsData,
     MsDataUrl,
@@ -129,6 +131,22 @@ class GetAlertListResp(BaseLinkableResp[Union[SaeAlert, TiAlert]]):
     count: int
 
 
+class GetEndpointActivityDataResp(BaseLinkableResp[EndpointActivity]):
+    progress_rate: int
+
+
+class GetEndpointActivityDataCountResp(BaseResponse):
+    total_count: int
+
+
+class GetEmailActivityDataResp(BaseLinkableResp[EmailActivity]):
+    progress_rate: int
+
+
+class GetEmailActivityDataCountResp(BaseResponse):
+    total_count: int
+
+
 class GetEndpointDataResp(BaseLinkableResp[Endpoint]):
     ...
 
@@ -171,8 +189,8 @@ class SandboxAnalysisResultResp(BaseResponse):
     true_file_type: Optional[str]
     digest: Optional[Digest]
     arguments: Optional[str]
-    detection_names: List[str] = Field(default=List)
-    threat_types: List[str] = Field(default=List)
+    detection_names: List[str] = Field(default=[])
+    threat_types: List[str] = Field(default=[])
 
 
 class SandboxSubmissionStatusResp(BaseStatusResponse):
