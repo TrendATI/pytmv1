@@ -3,11 +3,15 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from pydantic import BaseModel as PydanticBaseModel
+from pydantic import Field
 from pydantic.utils import to_lower_camel
 
 from .enums import (
     EntityType,
+    EventID,
+    EventSubID,
     Iam,
+    IntegrityLevel,
     InvestigationStatus,
     ObjectType,
     OperatingSystem,
@@ -101,6 +105,70 @@ class Endpoint(BaseConsumable):
     os_description: str
     product_code: ProductCode
     installed_product_codes: List[ProductCode]
+
+
+class EmailActivity(BaseConsumable):
+    mail_msg_subject: Optional[str]
+    mail_msg_id: Optional[str]
+    msg_uuid: Optional[str]
+    mailbox: Optional[str]
+    mail_sender_ip: Optional[str]
+    mail_from_addresses: List[str] = Field(default=[])
+    mail_whole_header: List[str] = Field(default=[])
+    mail_to_addresses: List[str] = Field(default=[])
+    mail_source_domain: Optional[str]
+    search_d_l: Optional[str]
+    scan_type: Optional[str]
+    event_time: Optional[int]
+    org_id: Optional[str]
+    mail_urls_visible_link: List[str] = Field(default=[])
+    mail_urls_real_link: List[str] = Field(default=[])
+
+
+class EndpointActivity(BaseConsumable):
+    dpt: Optional[int]
+    dst: Optional[str]
+    endpoint_guid: Optional[str]
+    endpoint_host_name: Optional[str]
+    endpoint_ip: List[str] = Field(default=[])
+    event_id: Optional[EventID]
+    event_sub_id: Optional[EventSubID]
+    object_integrity_level: Optional[IntegrityLevel]
+    object_true_type: Optional[int]
+    object_sub_true_type: Optional[int]
+    win_event_id: Optional[int]
+    event_time: Optional[int]
+    event_time_d_t: Optional[str]
+    host_name: Optional[str]
+    logon_user: List[str] = Field(default=[])
+    object_cmd: Optional[str]
+    object_file_hash_sha1: Optional[str]
+    object_file_path: Optional[str]
+    object_host_name: Optional[str]
+    object_ip: Optional[str]
+    object_ips: List[str] = Field(default=[])
+    object_port: Optional[int]
+    object_registry_data: Optional[str]
+    object_registry_key_handle: Optional[str]
+    object_registry_value: Optional[str]
+    object_signer: List[str] = Field(default=[])
+    object_signer_valid: List[bool] = Field(default=[])
+    object_user: Optional[str]
+    os: Optional[str]
+    parent_cmd: Optional[str]
+    parent_file_hash_sha1: Optional[str]
+    parent_file_path: Optional[str]
+    process_cmd: Optional[str]
+    process_file_hash_sha1: Optional[str]
+    process_file_path: Optional[str]
+    request: Optional[str]
+    search_d_l: Optional[str]
+    spt: Optional[int]
+    src: Optional[str]
+    src_file_hash_sha1: Optional[str]
+    src_file_path: Optional[str]
+    tags: List[str] = Field(default=[])
+    uuid: Optional[str]
 
 
 class HostInfo(BaseModel):
