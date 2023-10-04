@@ -211,7 +211,11 @@ class Client:
             Api.GET_ALERT_LIST,
             consumer,
             params=utils.filter_none(
-                {"startDateTime": start_time, "endDateTime": end_time}
+                {
+                    "startDateTime": start_time,
+                    "endDateTime": end_time,
+                    "orderBy": "createdDateTime desc",
+                }
             ),
         )
 
@@ -530,7 +534,11 @@ class Client:
             GetAlertListResp,
             Api.GET_ALERT_LIST,
             params=utils.filter_none(
-                {"startDateTime": start_time, "endDateTime": end_time}
+                {
+                    "startDateTime": start_time,
+                    "endDateTime": end_time,
+                    "orderBy": "createdDateTime desc",
+                }
             ),
         )
 
