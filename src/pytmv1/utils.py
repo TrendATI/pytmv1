@@ -85,7 +85,7 @@ def build_suspicious_request(
 
 
 def activity_query(op: QueryOp, **fields: str) -> Dict[str, str]:
-    return {"TMV1-Query": op.join([f"{k}:'{v}'" for k, v in fields.items()])}
+    return {"TMV1-Query": op.join([f'{k}:"{v}"' for k, v in fields.items()])}
 
 
 def endpoint_query(op: QueryOp, *values: str) -> Dict[str, str]:

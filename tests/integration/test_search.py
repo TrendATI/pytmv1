@@ -10,7 +10,9 @@ from pytmv1 import (
 
 
 def test_get_email_activity_data(client):
-    result = client.get_email_activity_data(mailMsgSubject="spam")
+    result = client.get_email_activity_data(
+        mailMsgSubject="spam", mailSenderIp="192.169.1.1"
+    )
     assert result.result_code == ResultCode.SUCCESS
     assert isinstance(result.response, GetEmailActivityDataResp)
     assert len(result.response.items) > 0
