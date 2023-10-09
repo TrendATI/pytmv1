@@ -73,6 +73,8 @@ class EntityType(str, Enum):
     HOST = "host"
     ACCOUNT = "account"
     EMAIL_ADDRESS = "emailAddress"
+    CONTAINER = "container"
+    CLOUD_IDENTITY = "cloudIdentity"
 
 
 class EventID(str, Enum):
