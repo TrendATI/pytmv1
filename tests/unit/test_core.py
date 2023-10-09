@@ -63,6 +63,7 @@ def test_consume_linkable_with_next_link_multiple_items(mocker, core):
     total = core._consume_linkable(
         lambda: core._process(GetExceptionListResp, Api.GET_EXCEPTION_LIST),
         lambda x: None,
+        {},
     )
     assert mock_process.call_count == 2
     assert total == 4
@@ -83,6 +84,7 @@ def test_consume_linkable_with_next_link_single_item(mocker, core):
     total = core._consume_linkable(
         lambda: core._process(GetExceptionListResp, Api.GET_EXCEPTION_LIST),
         lambda x: None,
+        {},
     )
     mock_process.assert_called()
     assert total == 1
@@ -95,6 +97,7 @@ def test_consume_linkable_without_next_link(mocker, core):
     total = core._consume_linkable(
         lambda: core._process(GetExceptionListResp, Api.GET_EXCEPTION_LIST),
         lambda x: None,
+        {},
     )
     mock_process.assert_called()
     assert total == 0

@@ -121,6 +121,7 @@ class Core:
                     **kwargs,
                 ),
                 consumer,
+                kwargs.get("headers", {}),
             )
         )
 
@@ -176,6 +177,7 @@ class Core:
         self,
         api_call: Callable[[], BaseLinkableResp[C]],
         consumer: Callable[[C], None],
+        headers: Dict[str, str],
         count: int = 0,
     ) -> int:
         total_count: int = count
@@ -189,9 +191,11 @@ class Core:
             return self._consume_linkable(
                 lambda: self._process(
                     type(response),
-                    sr.path[5:] + f"?skipToken={sr.query.split('=')[-1]}",
+                    f"{sr.path[5:]}?{sr.query}",
+                    headers=headers,
                 ),
                 consumer,
+                headers,
                 total_count,
             )
         log.info(
@@ -211,7 +215,7 @@ class Core:
         **kwargs: Any,
     ) -> R:
         log.info(
-            "Processing request [Method=%s, Class=%s, Api=%s, Options=%s]",
+            "Processing request [Method=%s, Class=%s, URI=%s, Options=%s]",
             method.value,
             class_.__name__,
             uri,
