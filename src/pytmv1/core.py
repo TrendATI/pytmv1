@@ -242,12 +242,8 @@ class Core:
             "Sending request [Method=%s, URL=%s, Headers=%s, Body=%s]",
             request.method,
             request.url,
-            re.sub("Bearer [^\\s']+", "*****", str(request.headers)),
-            (
-                request.body.decode("utf-8")
-                if type(request.body) == bytes
-                else request.body
-            ),
+            re.sub("Bearer \\S+", "*****", str(request.headers)),
+            ("Bytes" if type(request.body) == bytes else request.body),
         )
         response: Response = self._adapter.send(
             request, timeout=(self._c_timeout, self._r_timeout)
