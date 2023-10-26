@@ -75,6 +75,7 @@ class EntityType(str, Enum):
     EMAIL_ADDRESS = "emailAddress"
     CONTAINER = "container"
     CLOUD_IDENTITY = "cloudIdentity"
+    AWS_LAMBDA = "awsLambda"
 
 
 class EventID(str, Enum):
