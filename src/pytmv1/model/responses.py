@@ -99,7 +99,7 @@ class BytesResp(BaseResponse):
 class CollectFileTaskResp(BaseTaskResp):
     agent_guid: str
     endpoint_name: str
-    file_path: str
+    file_path: Optional[str]
     file_sha1: Optional[str]
     file_sha256: Optional[str]
     file_size: Optional[int]
