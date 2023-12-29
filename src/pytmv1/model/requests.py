@@ -20,6 +20,12 @@ class EndpointTask(BaseModel):
     """Description of a response task."""
 
 
+class CustomScriptTask(EndpointTask):
+    file_name: str
+    parameter: Optional[str] = None
+    """Options passed to the script during execution"""
+
+
 class EmailMessageIdTask(BaseModel):
     message_id: str
     """Email message id."""
