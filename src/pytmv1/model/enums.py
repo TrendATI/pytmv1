@@ -196,8 +196,8 @@ class QueryField(str, Enum):
 
 
 class QueryOp(str, Enum):
-    AND = " and "
-    OR = " or "
+    AND = "and"
+    OR = "or"
 
 
 class RiskLevel(str, Enum):
