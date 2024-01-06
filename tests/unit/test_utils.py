@@ -9,6 +9,15 @@ def test_b64_encode_with_none():
     assert utils._b64_encode(None) is None
 
 
+def test_activity_query():
+    assert (
+        utils.activity_query(
+            QueryOp.AND, dpt="443", endpointHostName="client1"
+        ).get("TMV1-Query")
+        == 'dpt:"443" and endpointHostName:"client1"'
+    )
+
+
 def test_endpoint_query_field():
     assert utils.endpoint_query_field("client1")[0] == QueryField.ENDPOINT_NAME
     assert utils.endpoint_query_field("client1")[1] == QueryField.LOGIN_ACCOUNT
