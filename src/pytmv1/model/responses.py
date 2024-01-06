@@ -38,7 +38,7 @@ class BaseResponse(BaseModel):
 
 
 class BaseLinkableResp(BaseResponse, GenericModel, Generic[C]):
-    next_link: Optional[str]
+    next_link: Optional[str] = None
     items: List[C] = []
 
 
@@ -55,8 +55,8 @@ class BaseStatusResponse(BaseResponse):
 
 class BaseTaskResp(BaseStatusResponse):
     action: TaskAction
-    description: Optional[str]
-    account: Optional[str]
+    description: Optional[str] = None
+    account: Optional[str] = None
 
 
 MR = TypeVar("MR", bound=BaseMultiResponse[Any])
@@ -99,13 +99,13 @@ class BytesResp(BaseResponse):
 class CollectFileTaskResp(BaseTaskResp):
     agent_guid: str
     endpoint_name: str
-    file_path: Optional[str]
-    file_sha1: Optional[str]
-    file_sha256: Optional[str]
-    file_size: Optional[int]
-    resource_location: Optional[str]
-    expired_date_time: Optional[str]
-    password: Optional[str]
+    file_path: Optional[str] = None
+    file_sha1: Optional[str] = None
+    file_sha256: Optional[str] = None
+    file_size: Optional[int] = None
+    resource_location: Optional[str] = None
+    expired_date_time: Optional[str] = None
+    password: Optional[str] = None
 
 
 class ConnectivityResp(BaseResponse):
@@ -178,7 +178,7 @@ class EmailMessageTaskResp(BaseTaskResp):
 class SubmitFileToSandboxResp(BaseResponse):
     id: str
     digest: Digest
-    arguments: Optional[str]
+    arguments: Optional[str] = None
 
 
 class SandboxAnalysisResultResp(BaseResponse):
@@ -186,19 +186,19 @@ class SandboxAnalysisResultResp(BaseResponse):
     type: SandboxObjectType
     analysis_completion_date_time: str
     risk_level: RiskLevel
-    true_file_type: Optional[str]
-    digest: Optional[Digest]
-    arguments: Optional[str]
+    true_file_type: Optional[str] = None
+    digest: Optional[Digest] = None
+    arguments: Optional[str] = None
     detection_names: List[str] = Field(default=[])
     threat_types: List[str] = Field(default=[])
 
 
 class SandboxSubmissionStatusResp(BaseStatusResponse):
     action: SandboxAction
-    resource_location: Optional[str]
-    is_cached: Optional[bool]
-    digest: Optional[Digest]
-    arguments: Optional[str]
+    resource_location: Optional[str] = None
+    is_cached: Optional[bool] = None
+    digest: Optional[Digest] = None
+    arguments: Optional[str] = None
 
 
 class SandboxSuspiciousListResp(BaseResponse):
@@ -214,4 +214,4 @@ class TerminateProcessTaskResp(BaseTaskResp):
     agent_guid: str
     endpoint_name: str
     file_sha1: str
-    file_name: Optional[str]
+    file_name: Optional[str] = None

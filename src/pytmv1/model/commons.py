@@ -76,11 +76,11 @@ class Digest(BaseModel):
 
 class EmailMessage(BaseModel):
     last_action_date_time: str
-    message_id: Optional[str]
-    mail_box: Optional[str]
-    message_subject: Optional[str]
-    unique_id: Optional[str]
-    organization_id: Optional[str]
+    message_id: Optional[str] = None
+    mail_box: Optional[str] = None
+    message_subject: Optional[str] = None
+    unique_id: Optional[str] = None
+    organization_id: Optional[str] = None
     status: Status
 
 
@@ -108,67 +108,67 @@ class Endpoint(BaseConsumable):
 
 
 class EmailActivity(BaseConsumable):
-    mail_msg_subject: Optional[str]
-    mail_msg_id: Optional[str]
-    msg_uuid: Optional[str]
-    mailbox: Optional[str]
-    mail_sender_ip: Optional[str]
+    mail_msg_subject: Optional[str] = None
+    mail_msg_id: Optional[str] = None
+    msg_uuid: Optional[str] = None
+    mailbox: Optional[str] = None
+    mail_sender_ip: Optional[str] = None
     mail_from_addresses: List[str] = Field(default=[])
     mail_whole_header: List[str] = Field(default=[])
     mail_to_addresses: List[str] = Field(default=[])
-    mail_source_domain: Optional[str]
-    search_d_l: Optional[str]
-    scan_type: Optional[str]
-    event_time: Optional[int]
-    org_id: Optional[str]
+    mail_source_domain: Optional[str] = None
+    search_d_l: Optional[str] = None
+    scan_type: Optional[str] = None
+    event_time: Optional[int] = None
+    org_id: Optional[str] = None
     mail_urls_visible_link: List[str] = Field(default=[])
     mail_urls_real_link: List[str] = Field(default=[])
 
 
 class EndpointActivity(BaseConsumable):
-    dpt: Optional[int]
-    dst: Optional[str]
-    endpoint_guid: Optional[str]
-    endpoint_host_name: Optional[str]
+    dpt: Optional[int] = None
+    dst: Optional[str] = None
+    endpoint_guid: Optional[str] = None
+    endpoint_host_name: Optional[str] = None
     endpoint_ip: List[str] = Field(default=[])
-    event_id: Optional[EventID]
-    event_sub_id: Optional[EventSubID]
-    object_integrity_level: Optional[IntegrityLevel]
-    object_true_type: Optional[int]
-    object_sub_true_type: Optional[int]
-    win_event_id: Optional[int]
-    event_time: Optional[int]
-    event_time_d_t: Optional[str]
-    host_name: Optional[str]
+    event_id: Optional[EventID] = None
+    event_sub_id: Optional[EventSubID] = None
+    object_integrity_level: Optional[IntegrityLevel] = None
+    object_true_type: Optional[int] = None
+    object_sub_true_type: Optional[int] = None
+    win_event_id: Optional[int] = None
+    event_time: Optional[int] = None
+    event_time_d_t: Optional[str] = None
+    host_name: Optional[str] = None
     logon_user: List[str] = Field(default=[])
-    object_cmd: Optional[str]
-    object_file_hash_sha1: Optional[str]
-    object_file_path: Optional[str]
-    object_host_name: Optional[str]
-    object_ip: Optional[str]
+    object_cmd: Optional[str] = None
+    object_file_hash_sha1: Optional[str] = None
+    object_file_path: Optional[str] = None
+    object_host_name: Optional[str] = None
+    object_ip: Optional[str] = None
     object_ips: List[str] = Field(default=[])
-    object_port: Optional[int]
-    object_registry_data: Optional[str]
-    object_registry_key_handle: Optional[str]
-    object_registry_value: Optional[str]
+    object_port: Optional[int] = None
+    object_registry_data: Optional[str] = None
+    object_registry_key_handle: Optional[str] = None
+    object_registry_value: Optional[str] = None
     object_signer: List[str] = Field(default=[])
     object_signer_valid: List[bool] = Field(default=[])
-    object_user: Optional[str]
-    os: Optional[str]
-    parent_cmd: Optional[str]
-    parent_file_hash_sha1: Optional[str]
-    parent_file_path: Optional[str]
-    process_cmd: Optional[str]
-    process_file_hash_sha1: Optional[str]
-    process_file_path: Optional[str]
-    request: Optional[str]
-    search_d_l: Optional[str]
-    spt: Optional[int]
-    src: Optional[str]
-    src_file_hash_sha1: Optional[str]
-    src_file_path: Optional[str]
+    object_user: Optional[str] = None
+    os: Optional[str] = None
+    parent_cmd: Optional[str] = None
+    parent_file_hash_sha1: Optional[str] = None
+    parent_file_path: Optional[str] = None
+    process_cmd: Optional[str] = None
+    process_file_hash_sha1: Optional[str] = None
+    process_file_path: Optional[str] = None
+    request: Optional[str] = None
+    search_d_l: Optional[str] = None
+    spt: Optional[int] = None
+    src: Optional[str] = None
+    src_file_hash_sha1: Optional[str] = None
+    src_file_path: Optional[str] = None
     tags: List[str] = Field(default=[])
-    uuid: Optional[str]
+    uuid: Optional[str] = None
 
 
 class HostInfo(BaseModel):
