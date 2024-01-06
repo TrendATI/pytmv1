@@ -864,7 +864,7 @@ class Client:
         :param poll_time_sec: Maximum time to wait for the result
         to be available.
         :type poll_time_sec: float
-        :rtype: Result[BaseTaskResultResp]:
+        :rtype: Result[S]:
         """
         return self._core.send_task_result(
             class_, task_id, poll, poll_time_sec

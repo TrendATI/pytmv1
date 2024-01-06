@@ -12,7 +12,7 @@ class AccountTask(BaseModel):
 
 
 class EndpointTask(BaseModel):
-    endpoint_name: Optional[str]
+    endpoint_name: Optional[str] = None
     """Endpoint name."""
     agent_guid: Optional[str] = None
     """Agent guid"""
@@ -23,7 +23,7 @@ class EndpointTask(BaseModel):
 class EmailMessageIdTask(BaseModel):
     message_id: str
     """Email message id."""
-    mail_box: Optional[str]
+    mail_box: Optional[str] = None
     """Email address."""
     description: Optional[str] = None
     """Description of a response task."""
