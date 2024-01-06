@@ -8,9 +8,9 @@ from urllib.parse import SplitResult, urlsplit
 from bs4 import BeautifulSoup
 from pydantic import AnyHttpUrl, parse_obj_as
 from requests import PreparedRequest, Request, Response
-from requests.adapters import HTTPAdapter
 
 from .__about__ import __version__
+from .adapter import HTTPAdapter
 from .exceptions import (
     ParseModelError,
     ServerHtmlError,
