@@ -2,7 +2,7 @@ import logging
 import re
 import time
 from logging import Logger
-from typing import Any, Callable, Dict, List, Type
+from typing import Any, Callable, Dict, List, Type, Union
 from urllib.parse import SplitResult, urlsplit
 
 from bs4 import BeautifulSoup
@@ -243,7 +243,7 @@ class Core:
             request.method,
             request.url,
             re.sub("Bearer \\S+", "*****", str(request.headers)),
-            ("Bytes" if type(request.body) == bytes else request.body),
+            _hide_binary(request),
         )
         response: Response = self._adapter.send(
             request, timeout=(self._c_timeout, self._r_timeout)
@@ -261,11 +261,15 @@ def _format(url: str) -> str:
     return (url if url.endswith("/") else url + "/") + API_VERSION
 
 
-def _hide_binary(response: Response) -> str:
-    content_type = response.headers.get("Content-Type", "")
+def _hide_binary(http_object: Union[PreparedRequest, Response]) -> str:
+    content_type = http_object.headers.get("Content-Type", "")
     if "json" not in content_type and "application" in content_type:
         return "***binary content***"
-    return response.text
+    if isinstance(http_object, Response):
+        return http_object.text
+    if isinstance(http_object.body, bytes):
+        return str(http_object.body, encoding="utf-8")
+    return str(http_object.body)
 
 
 def _is_http_success(status_codes: List[int]) -> bool:
