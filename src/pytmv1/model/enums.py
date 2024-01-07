@@ -39,6 +39,7 @@ class Api(str, Enum):
     RESET_PASSWORD = "/response/domainAccounts/resetPassword"
     RESTORE_EMAIL_MESSAGE = "/response/emails/restore"
     RESTORE_ENDPOINT = "/response/endpoints/restore"
+    RUN_CUSTOM_SCRIPT = "/response/endpoints/runScript"
     SIGN_OUT_ACCOUNT = "/response/domainAccounts/signOut"
     SUBMIT_FILE_TO_SANDBOX = "/sandbox/files/analyze"
     SUBMIT_URLS_TO_SANDBOX = "/sandbox/urls/analyze"

@@ -175,6 +175,16 @@ class EmailMessageTaskResp(BaseTaskResp):
     tasks: List[EmailMessage]
 
 
+class CustomScriptTaskResp(BaseTaskResp):
+    file_name: str
+    agent_guid: str
+    endpoint_name: str
+    parameter: Optional[str] = None
+    resource_location: Optional[str] = None
+    expired_date_time: Optional[str] = None
+    password: Optional[str] = None
+
+
 class SubmitFileToSandboxResp(BaseResponse):
     id: str
     digest: Digest

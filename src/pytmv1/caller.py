@@ -25,6 +25,7 @@ from .model.enums import (
 )
 from .model.requests import (
     AccountTask,
+    CustomScriptTask,
     EmailMessageIdTask,
     EmailMessageUIdTask,
     EndpointTask,
@@ -993,6 +994,23 @@ class Client:
             json=[
                 task.dict(by_alias=True, exclude_none=True)
                 for task in messages
+            ],
+        )
+
+    def run_custom_script(
+        self, *scripts: CustomScriptTask
+    ) -> MultiResult[MultiResp]:
+        """Runs multiple custom script.
+
+        :param scripts: Custom scripts to run.
+        :type scripts: Tuple[CustomScriptTask, ...]
+        :rtype: MultiResult[MultiResp]
+        """
+        return self._core.send_multi(
+            MultiResp,
+            Api.RUN_CUSTOM_SCRIPT,
+            json=[
+                task.dict(by_alias=True, exclude_none=True) for task in scripts
             ],
         )
 

@@ -53,6 +53,7 @@ from .model.enums import (
 )
 from .model.requests import (
     AccountTask,
+    CustomScriptTask,
     EmailMessageIdTask,
     EmailMessageUIdTask,
     EndpointTask,
@@ -70,6 +71,7 @@ from .model.responses import (
     CollectFileTaskResp,
     ConnectivityResp,
     ConsumeLinkableResp,
+    CustomScriptTaskResp,
     EmailMessageTaskResp,
     EndpointTaskResp,
     GetAlertDetailsResp,
@@ -108,6 +110,7 @@ __all__ = [
     "CollectFileTaskResp",
     "ConnectivityResp",
     "ConsumeLinkableResp",
+    "CustomScriptTask",
     "Digest",
     "EmailActivity",
     "EmailMessage",
@@ -162,6 +165,7 @@ __all__ = [
     "Result",
     "ResultCode",
     "RiskLevel",
+    "CustomScriptTaskResp",
     "SaeAlert",
     "SaeIndicator",
     "SandboxAction",
