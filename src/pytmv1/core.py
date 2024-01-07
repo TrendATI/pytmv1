@@ -187,7 +187,7 @@ class Core:
             total_count += 1
         if response.next_link:
             sr: SplitResult = urlsplit(response.next_link)
-            log.info("Found nextLink")
+            log.debug("Found nextLink")
             return self._consume_linkable(
                 lambda: self._process(
                     type(response),
@@ -198,7 +198,7 @@ class Core:
                 headers,
                 total_count,
             )
-        log.info(
+        log.debug(
             "Records consumed: [Total=%s, Type=%s]",
             total_count,
             type(
@@ -214,7 +214,7 @@ class Core:
         method: HttpMethod = HttpMethod.GET,
         **kwargs: Any,
     ) -> R:
-        log.info(
+        log.debug(
             "Processing request [Method=%s, Class=%s, URI=%s, Options=%s]",
             method.value,
             class_.__name__,
@@ -280,7 +280,9 @@ def _parse_data(raw_response: Response, class_: Type[R]) -> R:
     content_type = raw_response.headers.get("Content-Type", "")
     if "json" in content_type:
         if issubclass(class_, BaseMultiResponse):
-            log.info("Parsing json multi response [Class=%s]", class_.__name__)
+            log.debug(
+                "Parsing json multi response [Class=%s]", class_.__name__
+            )
             class_d: Type[List[Any]]
             if issubclass(class_, MultiUrlResp):
                 class_d = List[MsDataUrl]
@@ -341,7 +343,7 @@ def _poll_status(
 
 
 def _validate(raw_response: Response) -> None:
-    log.info("Validating response [%s]", raw_response)
+    log.debug("Validating response [%s]", raw_response)
     content_type: str = raw_response.headers.get("Content-Type", "")
     if "text/html" in content_type:
         raise ServerHtmlError(
