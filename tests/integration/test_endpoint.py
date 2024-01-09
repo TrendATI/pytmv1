@@ -1,4 +1,11 @@
-from pytmv1 import EndpointTask, FileTask, MultiResp, ProcessTask, ResultCode
+from pytmv1 import (
+    CustomScriptTask,
+    EndpointTask,
+    FileTask,
+    MultiResp,
+    ProcessTask,
+    ResultCode,
+)
 
 
 def test_collect_file(client):
@@ -21,6 +28,16 @@ def test_isolate_endpoint(client):
 
 def test_restore_endpoint(client):
     result = client.restore_endpoint(EndpointTask(endpointName="client1"))
+    assert isinstance(result.response, MultiResp)
+    assert result.result_code == ResultCode.SUCCESS
+    assert len(result.response.items) > 0
+    assert result.response.items[0].status == 202
+
+
+def test_run_custom_script(client):
+    result = client.run_custom_script(
+        CustomScriptTask(fileName="test", endpointName="client1")
+    )
     assert isinstance(result.response, MultiResp)
     assert result.result_code == ResultCode.SUCCESS
     assert len(result.response.items) > 0

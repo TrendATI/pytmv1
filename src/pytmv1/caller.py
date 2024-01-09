@@ -25,6 +25,7 @@ from .model.enums import (
 )
 from .model.requests import (
     AccountTask,
+    CustomScriptTask,
     EmailMessageIdTask,
     EmailMessageUIdTask,
     EndpointTask,
@@ -864,7 +865,7 @@ class Client:
         :param poll_time_sec: Maximum time to wait for the result
         to be available.
         :type poll_time_sec: float
-        :rtype: Result[BaseTaskResultResp]:
+        :rtype: Result[S]:
         """
         return self._core.send_task_result(
             class_, task_id, poll, poll_time_sec
@@ -993,6 +994,23 @@ class Client:
             json=[
                 task.dict(by_alias=True, exclude_none=True)
                 for task in messages
+            ],
+        )
+
+    def run_custom_script(
+        self, *scripts: CustomScriptTask
+    ) -> MultiResult[MultiResp]:
+        """Runs multiple custom script.
+
+        :param scripts: Custom scripts to run.
+        :type scripts: Tuple[CustomScriptTask, ...]
+        :rtype: MultiResult[MultiResp]
+        """
+        return self._core.send_multi(
+            MultiResp,
+            Api.RUN_CUSTOM_SCRIPT,
+            json=[
+                task.dict(by_alias=True, exclude_none=True) for task in scripts
             ],
         )
 

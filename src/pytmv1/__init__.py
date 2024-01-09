@@ -2,6 +2,7 @@ from .__about__ import __version__
 from .caller import Client, client
 from .mapper import map_cef
 from .model.commons import (
+    Account,
     Alert,
     Digest,
     EmailActivity,
@@ -34,6 +35,7 @@ from .model.enums import (
     EntityType,
     EventID,
     EventSubID,
+    Iam,
     IntegrityLevel,
     InvestigationStatus,
     ObjectType,
@@ -53,6 +55,7 @@ from .model.enums import (
 )
 from .model.requests import (
     AccountTask,
+    CustomScriptTask,
     EmailMessageIdTask,
     EmailMessageUIdTask,
     EndpointTask,
@@ -70,6 +73,7 @@ from .model.responses import (
     CollectFileTaskResp,
     ConnectivityResp,
     ConsumeLinkableResp,
+    CustomScriptTaskResp,
     EmailMessageTaskResp,
     EndpointTaskResp,
     GetAlertDetailsResp,
@@ -97,6 +101,7 @@ __all__ = [
     "__version__",
     "client",
     "map_cef",
+    "Account",
     "AccountTask",
     "AccountTaskResp",
     "AddAlertNoteResp",
@@ -108,6 +113,7 @@ __all__ = [
     "CollectFileTaskResp",
     "ConnectivityResp",
     "ConsumeLinkableResp",
+    "CustomScriptTask",
     "Digest",
     "EmailActivity",
     "EmailMessage",
@@ -135,6 +141,7 @@ __all__ = [
     "GetExceptionListResp",
     "GetSuspiciousListResp",
     "HostInfo",
+    "Iam",
     "ImpactScope",
     "Indicator",
     "IntegrityLevel",
@@ -162,6 +169,7 @@ __all__ = [
     "Result",
     "ResultCode",
     "RiskLevel",
+    "CustomScriptTaskResp",
     "SaeAlert",
     "SaeIndicator",
     "SandboxAction",

@@ -2,15 +2,15 @@ import logging
 import re
 import time
 from logging import Logger
-from typing import Any, Callable, Dict, List, Type
+from typing import Any, Callable, Dict, List, Type, Union
 from urllib.parse import SplitResult, urlsplit
 
 from bs4 import BeautifulSoup
 from pydantic import AnyHttpUrl, parse_obj_as
 from requests import PreparedRequest, Request, Response
-from requests.adapters import HTTPAdapter
 
 from .__about__ import __version__
+from .adapter import HTTPAdapter
 from .exceptions import (
     ParseModelError,
     ServerHtmlError,
@@ -187,7 +187,7 @@ class Core:
             total_count += 1
         if response.next_link:
             sr: SplitResult = urlsplit(response.next_link)
-            log.info("Found nextLink")
+            log.debug("Found nextLink")
             return self._consume_linkable(
                 lambda: self._process(
                     type(response),
@@ -198,7 +198,7 @@ class Core:
                 headers,
                 total_count,
             )
-        log.info(
+        log.debug(
             "Records consumed: [Total=%s, Type=%s]",
             total_count,
             type(
@@ -214,7 +214,7 @@ class Core:
         method: HttpMethod = HttpMethod.GET,
         **kwargs: Any,
     ) -> R:
-        log.info(
+        log.debug(
             "Processing request [Method=%s, Class=%s, URI=%s, Options=%s]",
             method.value,
             class_.__name__,
@@ -243,7 +243,7 @@ class Core:
             request.method,
             request.url,
             re.sub("Bearer \\S+", "*****", str(request.headers)),
-            ("Bytes" if type(request.body) == bytes else request.body),
+            _hide_binary(request),
         )
         response: Response = self._adapter.send(
             request, timeout=(self._c_timeout, self._r_timeout)
@@ -261,11 +261,15 @@ def _format(url: str) -> str:
     return (url if url.endswith("/") else url + "/") + API_VERSION
 
 
-def _hide_binary(response: Response) -> str:
-    content_type = response.headers.get("Content-Type", "")
+def _hide_binary(http_object: Union[PreparedRequest, Response]) -> str:
+    content_type = http_object.headers.get("Content-Type", "")
     if "json" not in content_type and "application" in content_type:
         return "***binary content***"
-    return response.text
+    if isinstance(http_object, Response):
+        return http_object.text
+    if isinstance(http_object.body, bytes):
+        return str(http_object.body, encoding="utf-8")
+    return str(http_object.body)
 
 
 def _is_http_success(status_codes: List[int]) -> bool:
@@ -276,7 +280,9 @@ def _parse_data(raw_response: Response, class_: Type[R]) -> R:
     content_type = raw_response.headers.get("Content-Type", "")
     if "json" in content_type:
         if issubclass(class_, BaseMultiResponse):
-            log.info("Parsing json multi response [Class=%s]", class_.__name__)
+            log.debug(
+                "Parsing json multi response [Class=%s]", class_.__name__
+            )
             class_d: Type[List[Any]]
             if issubclass(class_, MultiUrlResp):
                 class_d = List[MsDataUrl]
@@ -337,7 +343,7 @@ def _poll_status(
 
 
 def _validate(raw_response: Response) -> None:
-    log.info("Validating response [%s]", raw_response)
+    log.debug("Validating response [%s]", raw_response)
     content_type: str = raw_response.headers.get("Content-Type", "")
     if "text/html" in content_type:
         raise ServerHtmlError(

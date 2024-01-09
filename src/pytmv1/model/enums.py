@@ -39,6 +39,7 @@ class Api(str, Enum):
     RESET_PASSWORD = "/response/domainAccounts/resetPassword"
     RESTORE_EMAIL_MESSAGE = "/response/emails/restore"
     RESTORE_ENDPOINT = "/response/endpoints/restore"
+    RUN_CUSTOM_SCRIPT = "/response/endpoints/runScript"
     SIGN_OUT_ACCOUNT = "/response/domainAccounts/signOut"
     SUBMIT_FILE_TO_SANDBOX = "/sandbox/files/analyze"
     SUBMIT_URLS_TO_SANDBOX = "/sandbox/urls/analyze"
@@ -196,8 +197,8 @@ class QueryField(str, Enum):
 
 
 class QueryOp(str, Enum):
-    AND = " and "
-    OR = " or "
+    AND = "and"
+    OR = "or"
 
 
 class RiskLevel(str, Enum):
@@ -244,17 +245,28 @@ class Status(str, Enum):
 
 
 class TaskAction(str, Enum):
-    COLLECT_FILE = ("collectFile",)
-    ISOLATE_ENDPOINT = ("isolate",)
-    RESTORE_ENDPOINT = ("restoreIsolate",)
-    TERMINATE_PROCESS = ("terminateProcess",)
+    COLLECT_FILE = "collectFile"
+    COLLECT_EVIDENCE = "collectEvidence"
+    COLLECT_NETWORK_ANALYSIS_PACKAGE = "collectNetworkAnalysisPackage"
+    ISOLATE_ENDPOINT = "isolate"
+    ISOLATE_ENDPOINT_MULTIPLE = "isolateForMultiple"
+    RESTORE_ENDPOINT = "restoreIsolate"
+    RESTORE_ENDPOINT_MULTIPLE = "restoreIsolateForMultiple"
+    TERMINATE_PROCESS = "terminateProcess"
+    DUMP_PROCESS_MEMORY = "dumpProcessMemory"
     QUARANTINE_MESSAGE = "quarantineMessage"
-    DELETE_MESSAGE = ("deleteMessage",)
-    RESTORE_MESSAGE = ("restoreMessage",)
-    BLOCK_SUSPICIOUS = ("block",)
-    REMOVE_SUSPICIOUS = ("restoreBlock",)
+    DELETE_MESSAGE = "deleteMessage"
+    RESTORE_MESSAGE = "restoreMessage"
+    BLOCK_SUSPICIOUS = "block"
+    REMOVE_SUSPICIOUS = "restoreBlock"
     RESET_PASSWORD = "resetPassword"
-    SUBMIT_SANDBOX = ("submitSandbox",)
-    ENABLE_ACCOUNT = ("enableAccount",)
-    DISABLE_ACCOUNT = ("disableAccount",)
+    SUBMIT_SANDBOX = "submitSandbox"
+    ENABLE_ACCOUNT = "enableAccount"
+    DISABLE_ACCOUNT = "disableAccount"
     FORCE_SIGN_OUT = "forceSignOut"
+    REMOTE_SHELL = "remoteShell"
+    RUN_INVESTIGATION_KIT = "runInvestigationKit"
+    RUN_CUSTOM_SCRIPT = "runCustomScript"
+    RUN_CUSTOM_SCRIPT_MULTIPLE = "runCustomScriptForMultiple"
+    RUN_OS_QUERY = "runOsquery"
+    RUN_YARA_RULES = "runYaraRules"

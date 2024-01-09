@@ -1,5 +1,3 @@
-import socket
-
 import pytest
 
 import pytmv1
@@ -17,32 +15,28 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture(scope="package")
-def client(pytestconfig):
+def url(pytestconfig):
+    url = pytestconfig.getoption("mock-url")
+    return url if url else "https://dummy-server.com"
+
+
+@pytest.fixture(scope="package")
+def client(pytestconfig, url):
     return pytmv1.client(
         "appname",
         "token",
-        _default(pytestconfig.getoption("mock-url")),
+        url,
     )
 
 
 @pytest.fixture(scope="package")
-def core(pytestconfig):
+def core(pytestconfig, url):
     return Core(
         "appname",
         "token",
-        _default(pytestconfig.getoption("mock-url")),
+        url,
         0,
         0,
         30,
         30,
     )
-
-
-@pytest.fixture(scope="package")
-def ip(pytestconfig):
-    url = pytestconfig.getoption("mock-url")
-    return socket.gethostbyname(url.split("/")[2]) if url != "" else None
-
-
-def _default(url: str):
-    return url if url else "https://dummy-server.com"
